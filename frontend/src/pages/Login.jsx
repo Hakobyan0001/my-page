@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Grid,
   Paper,
@@ -6,12 +7,20 @@ import {
   TextField,
   Button,
   Typography,
-  Link,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import { styled } from "@mui/system";
 
+const StyledLink = styled(Link)`
+  margin: 5px;
+  text-decoration: none;
+  color: black;
+  &:hover {
+    color: blue;
+  }
+`;
 function Login() {
   const [userInfo, setUserInfo] = useState({ uName: "", pass: "" });
   const paperStyle = {
@@ -23,10 +32,20 @@ function Login() {
   const btnstyle = { margin: "8px 0" };
   const textfieldStyle = { margin: "5px 0" };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(userInfo);
-    setUserInfo({ uName: "", pass: "" });
+  const handleSubmit = async (e) => {
+    const response = await fetch("http://localhost:3001/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userInfo),
+    });
+
+    if (response.ok) {
+      console.log("User data sent successfully.");
+    } else {
+      console.error("Failed to send user data.");
+    }
   };
 
   const handleChange = (e) => {
@@ -35,6 +54,7 @@ function Login() {
       [e.target.name]: e.target.value,
     }));
   };
+
   return (
     <Grid>
       <Paper elevation={10} style={paperStyle}>
@@ -81,14 +101,16 @@ function Login() {
           </Button>
         </form>
         <Typography>
-          <Link href="#">Forgot password ?</Link>
+          <StyledLink to="#">Forgot password ?</StyledLink>
         </Typography>
         <Typography>
-          <Link href="#">Create Account</Link>
+          <StyledLink to="/registration">Create Account</StyledLink>
+        </Typography>
+        <Typography>
+          <StyledLink to="/">Go to home</StyledLink>
         </Typography>
       </Paper>
     </Grid>
   );
 }
-
 export default Login;
