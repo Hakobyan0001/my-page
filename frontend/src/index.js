@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { ThemeProvider, createTheme } from "@mui/material";
-import App from "./app/App"; // Make sure to import your App component or the root component here
+import App from "./app/App.jsx";
 
 const theme = createTheme();
 

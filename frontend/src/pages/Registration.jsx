@@ -1,6 +1,24 @@
 import React, { useState } from "react";
-import { Grid, Paper, Avatar, TextField, Button } from "@mui/material";
+import { Link } from "react-router-dom";
+import {
+  Grid,
+  Paper,
+  Avatar,
+  TextField,
+  Button,
+  Typography,
+} from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { styled } from "@mui/system";
+
+const StyledLink = styled(Link)`
+  margin: 5px;
+  text-decoration: none;
+  color: black;
+  &:hover {
+    color: blue;
+  }
+`;
 
 function Registration() {
   const [userInfo, setUserInfo] = useState({
@@ -21,7 +39,6 @@ function Registration() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(userInfo);
     validatePassword();
     setUserInfo({ uName: "", email: "", pass: "", confirmPass: "" });
   };
@@ -35,10 +52,8 @@ function Registration() {
 
   function validatePassword() {
     if (userInfo.pass !== userInfo.confirmPass) {
-      // userInfo.confirmPass.setCustomValidity
       console.log("Passwords Don't Match");
     } else {
-      // userInfo.confirmPass.setCustomValidity("");
     }
   }
   return (
@@ -103,6 +118,12 @@ function Registration() {
             Create Account
           </Button>
         </form>
+        <Typography>
+          <StyledLink to="/login">Have account ?</StyledLink>
+        </Typography>
+        <Typography>
+          <StyledLink to="/">Go to home</StyledLink>
+        </Typography>
       </Paper>
     </Grid>
   );
