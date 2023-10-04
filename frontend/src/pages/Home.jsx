@@ -27,7 +27,7 @@ export default function Home() {
     <div>
       <h1>Welcome to the Home Page</h1>
       {users.map((e) => {
-        return <h3> "username:" {e.uName}</h3>;
+        return <h3> username: {e.uName} </h3>;
       })}
       <StyledLink to="/login">Go to Login</StyledLink>
       <StyledLink to="/registration">Go to Registration</StyledLink>

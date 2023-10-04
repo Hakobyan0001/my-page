@@ -1,47 +1,67 @@
-function validation(users) {
-  function checkingUserName(usersuName) {
-    let error = "";
+export default class Validator {
+  static validate(usersData) {
+    const fNameError = Validator.checkingUserName(usersData.uName);
+    const emailError = Validator.checkingEmail(usersData.email);
+    const passError = Validator.checkingPassword(usersData.pass);
+    const confirmPassError = Validator.confirmingPassword(
+      usersData.pass,
+      usersData.confirmPass
+    );
+
+    return { fNameError, emailError, passError, confirmPassError };
+  }
+
+  static checkingUserName(name) {
+    let error;
     let illegalChars = /\W/;
 
-    if (usersuName == "") {
-      error = "&bull; Please enter Username<br>";
-    } else if (usersuName.length < 5 || usersuName.length > 15) {
-      error = "&bull; Username must have 5-15 characters<br>";
-    } else if (illegalChars.test(usersuName)) {
-      error =
-        "&bull; Please enter valid Username. Use only numbers and alphabets<br>";
+    if (name == "") {
+      error = "Please enter Username";
+    } else if (name.length < 5 || name.length > 15) {
+      error = "Username must have 5-15 characters";
+    } else if (illegalChars.test(name)) {
+      error = "Please enter valid Username. Use only numbers and alphabets";
     } else {
       error = "";
     }
     return error;
   }
 
-  function checkingEmail(usersemail) {
-    let mailFormat = /\S+@\S+\.\S+/;
-    if (usersemail.value.match(mailFormat)) {
-      alert("Valid address!");
-      return true;
-    } else {
-      alert("Invalid address!");
-      return false;
+  static checkingEmail(email) {
+    if (email) {
+      let mailFormat = /\S+@\S+\.\S+/;
+      let error;
+      if (email.match(mailFormat)) {
+        error = "";
+      } else {
+        error = "Invalid address!";
+      }
+      return error;
     }
   }
-  function checkingPassword(userspass) {
+  static checkingPassword(password) {
+    let error;
     {
       var pass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
-      if (userspass.value.match(pass)) {
-        alert("Correct, try another...");
-        return true;
+      if (password.match(pass)) {
+        error = "";
       } else {
-        alert("Wrong...!");
-        return false;
+        error = "Wrong...!";
       }
+      return error;
     }
   }
-  function confirmingPassword(userspass) {
-    if (users.pass !== users.confirmPass) {
-      console.log("Passwords Don't Match");
+  // ka sxal
+  static confirmingPassword(password, confirmPassword) {
+    let error;
+    if (confirmPassword) {
+      if (password !== confirmPassword) {
+        error = "Passwords Don't Match";
+      } else {
+        error = "correct";
+      }
     } else {
+      return (error = "please enter password");
     }
   }
 }

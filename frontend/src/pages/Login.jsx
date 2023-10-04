@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Grid,
   Paper,
@@ -21,18 +21,25 @@ const StyledLink = styled(Link)`
     color: blue;
   }
 `;
+const paperStyle = {
+  padding: 20,
+  width: 280,
+  margin: "20px auto",
+};
+const avatarStyle = { backgroundColor: "#1bbd7e" };
+const btnstyle = { margin: "8px 0" };
+const textfieldStyle = { margin: "5px 0" };
+
 function Login() {
+  const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({ uName: "", pass: "" });
-  const paperStyle = {
-    padding: 20,
-    width: 280,
-    margin: "20px auto",
-  };
-  const avatarStyle = { backgroundColor: "#1bbd7e" };
-  const btnstyle = { margin: "8px 0" };
-  const textfieldStyle = { margin: "5px 0" };
+  const [errors, setErrors] = useState({
+    fNameError: "",
+    passError: "",
+  });
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
     const response = await fetch("http://localhost:3001/login", {
       method: "POST",
       headers: {
@@ -41,10 +48,12 @@ function Login() {
       body: JSON.stringify(userInfo),
     });
 
-    if (response.ok) {
+    const res = await response.json();
+    if (res.ok) {
       console.log("User data sent successfully.");
+      navigate("/");
     } else {
-      console.error("Failed to send user data.");
+      setErrors(res.errors);
     }
   };
 
@@ -73,7 +82,8 @@ function Login() {
             value={userInfo.uName}
             onChange={handleChange}
             fullWidth
-            required
+            error={!!errors.fNameError}
+            helperText={errors.fNameError}
           />
           <TextField
             style={textfieldStyle}
@@ -84,7 +94,8 @@ function Login() {
             value={userInfo.pass}
             onChange={handleChange}
             fullWidth
-            required
+            error={!!errors.passError}
+            helperText={errors.passError}
           />
           <FormControlLabel
             control={<Checkbox name="checkedB" color="primary" />}

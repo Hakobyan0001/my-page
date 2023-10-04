@@ -1,13 +1,14 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import { ThemeProvider, createTheme } from "@mui/material";
 import App from "./app/App.jsx";
+import { createRoot } from "react-dom/client";
 
 const theme = createTheme();
+const container = document.getElementById("root");
+const root = createRoot(container);
 
-ReactDOM.render(
+root.render(
   <ThemeProvider theme={theme}>
     <App />
-  </ThemeProvider>,
-  document.getElementById("root")
+  </ThemeProvider>
 );

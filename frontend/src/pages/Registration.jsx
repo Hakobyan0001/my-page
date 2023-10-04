@@ -19,6 +19,14 @@ const StyledLink = styled(Link)`
     color: blue;
   }
 `;
+const paperStyle = {
+  padding: 20,
+  width: 280,
+  margin: "20px auto",
+};
+const avatarStyle = { backgroundColor: "#1bbd7e" };
+const btnstyle = { margin: "8px 0" };
+const textfieldStyle = { margin: "5px 0" };
 
 function Registration() {
   const [userInfo, setUserInfo] = useState({
@@ -27,20 +35,30 @@ function Registration() {
     pass: "",
     confirmPass: "",
   });
+  const [errors, setErrors] = useState({
+    fNameError: "",
+    emailError: "",
+    passError: "",
+    confirmPassError: "",
+  });
 
-  const paperStyle = {
-    padding: 20,
-    width: 280,
-    margin: "20px auto",
-  };
-  const avatarStyle = { backgroundColor: "#1bbd7e" };
-  const btnstyle = { margin: "8px 0" };
-  const textfieldStyle = { margin: "5px 0" };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    validatePassword();
-    setUserInfo({ uName: "", email: "", pass: "", confirmPass: "" });
+    const response = await fetch("http://localhost:3001/registration", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userInfo),
+    });
+    const res = await response.json();
+    console.log(res);
+    if (res.ok) {
+      console.log("User data sent successfully.");
+      // setUserInfo({ uName: "", email: "", pass: "", confirmPass: "" });
+    } else {
+      setErrors(res.errors);
+    }
   };
 
   const handleChange = (e) => {
@@ -50,12 +68,6 @@ function Registration() {
     }));
   };
 
-  function validatePassword() {
-    if (userInfo.pass !== userInfo.confirmPass) {
-      console.log("Passwords Don't Match");
-    } else {
-    }
-  }
   return (
     <Grid>
       <Paper elevation={10} style={paperStyle}>
@@ -74,7 +86,8 @@ function Registration() {
             value={userInfo.uName}
             onChange={handleChange}
             fullWidth
-            required
+            error={!!errors.fNameError}
+            helperText={errors.fNameError}
           />
           <TextField
             style={textfieldStyle}
@@ -84,7 +97,8 @@ function Registration() {
             value={userInfo.email}
             onChange={handleChange}
             fullWidth
-            required
+            error={!!errors.emailError}
+            helperText={errors.emailError}
           />
           <TextField
             style={textfieldStyle}
@@ -95,7 +109,8 @@ function Registration() {
             value={userInfo.pass}
             onChange={handleChange}
             fullWidth
-            required
+            error={!!errors.passError}
+            helperText={errors.passError}
           />
           <TextField
             style={textfieldStyle}
@@ -106,7 +121,8 @@ function Registration() {
             value={userInfo.confirmPass}
             onChange={handleChange}
             fullWidth
-            required
+            error={!!errors.confirmPassError}
+            helperText={errors.confirmPassError}
           />
           <Button
             type="submit"
