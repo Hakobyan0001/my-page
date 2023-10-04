@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import Validator from "./utils/validation.js";
 
 const app = express();
 const port = 3001;
@@ -13,13 +14,29 @@ app.use(
 app.use(express.json());
 
 app.post("/registration", (req, res) => {
+  let errors = Validator.validate(req.body);
+  if (
+    errors.fNameError ||
+    errors.emailError ||
+    errors.passError ||
+    errors.confirmPassError
+  ) {
+    res.json({ errors, ok: false });
+    return;
+  }
   users.push(req.body);
   res.json(req.body);
 });
+
 app.post("/login", (req, res) => {
-  users.push(req.body);
-  res.json({ message: "User data received successfully" });
+  let errors = Validator.validate(req.body);
+  if (req.body.uName !== users.uName || req.body.pass !== users.pass) {
+    res.json({ errors, ok: false });
+    return;
+  }
+  res.json({ data: req.body, ok: true });
 });
+
 app.get("/users", (req, res) => {
   res.json(users);
 });
