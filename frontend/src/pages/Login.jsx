@@ -82,7 +82,7 @@ function Login() {
             value={userInfo.uName}
             onChange={handleChange}
             fullWidth
-            error={!!errors.fNameError}
+            error={!!(errors && errors.fNameError)}
             helperText={errors.fNameError}
           />
           <TextField
@@ -94,7 +94,7 @@ function Login() {
             value={userInfo.pass}
             onChange={handleChange}
             fullWidth
-            error={!!errors.passError}
+            error={!!(errors && errors.fNameError)}
             helperText={errors.passError}
           />
           <FormControlLabel

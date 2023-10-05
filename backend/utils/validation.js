@@ -12,56 +12,46 @@ export default class Validator {
   }
 
   static checkingUserName(name) {
-    let error;
-    let illegalChars = /\W/;
-
-    if (name == "") {
-      error = "Please enter Username";
-    } else if (name.length < 5 || name.length > 15) {
-      error = "Username must have 5-15 characters";
-    } else if (illegalChars.test(name)) {
-      error = "Please enter valid Username. Use only numbers and alphabets";
-    } else {
-      error = "";
+    if (!name) {
+      return "Please enter Username";
     }
-    return error;
+    const illegalChars = /\W/;
+    if (name.length < 5 || name.length > 15) {
+      return "Username must have 5-15 characters";
+    } else if (illegalChars.test(name)) {
+      return "Please enter valid Username. Use only numbers and alphabets";
+    }
+    return "";
   }
 
   static checkingEmail(email) {
-    if (email) {
-      let mailFormat = /\S+@\S+\.\S+/;
-      let error;
-      if (email.match(mailFormat)) {
-        error = "";
-      } else {
-        error = "Invalid address!";
-      }
-      return error;
+    let mailFormat = /\S+@\S+\.\S+/;
+    if (!email) {
+      return "Please enter email";
     }
+    if (email && !email.match(mailFormat)) {
+      return "Invalid address!";
+    }
+    return "";
   }
+
   static checkingPassword(password) {
-    let error;
-    {
-      var pass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
-      if (password.match(pass)) {
-        error = "";
-      } else {
-        error = "Wrong...!";
-      }
-      return error;
+    if (!password) {
+      return "Please enter password";
     }
+    const passFormat = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+    if (!password.match(passFormat)) {
+      return "Password must contain 6-20 characters with at least one number, one lowercase letter, and one uppercase letter";
+    }
+    return "";
   }
-  // ka sxal
+
   static confirmingPassword(password, confirmPassword) {
-    let error;
-    if (confirmPassword) {
+    if (password && confirmPassword) {
       if (password !== confirmPassword) {
-        error = "Passwords Don't Match";
-      } else {
-        error = "correct";
+        return "Passwords Don't Match";
       }
-    } else {
-      return (error = "please enter password");
     }
+    return "";
   }
 }

@@ -25,7 +25,7 @@ app.post("/registration", (req, res) => {
     return;
   }
   users.push(req.body);
-  res.json(req.body);
+  res.json({ data: req.body, ok: true });
 });
 
 app.post("/login", (req, res) => {
