@@ -7,7 +7,13 @@ import {
   TextField,
   Button,
   Typography,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
+import FilledInput from "@mui/material/FilledInput";
+
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
@@ -37,6 +43,7 @@ function Login() {
     fNameError: "",
     passError: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -64,6 +71,14 @@ function Login() {
     }));
   };
 
+  const handleClickShowPassword = () => {
+    setShowPassword((show) => !show);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+  console.log(showPassword);
   return (
     <Grid>
       <Paper elevation={10} style={paperStyle}>
@@ -82,19 +97,31 @@ function Login() {
             value={userInfo.uName}
             onChange={handleChange}
             fullWidth
-            error={!!errors.fNameError}
+            error={!!(errors && errors.fNameError)}
             helperText={errors.fNameError}
           />
-          <TextField
-            style={textfieldStyle}
+          <FilledInput
+            id="outlined-basic"
+            variant="outlined"
             name="pass"
             label="Password"
             placeholder="Enter password"
-            type="password"
-            value={userInfo.pass}
+            type={showPassword ? "text" : "password"}
             onChange={handleChange}
+            value={userInfo.pass}
             fullWidth
-            error={!!errors.passError}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                </IconButton>
+              </InputAdornment>
+            }
+            error={!!(errors && errors.passError)}
             helperText={errors.passError}
           />
           <FormControlLabel

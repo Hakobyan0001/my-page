@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Grid,
   Paper,
@@ -10,7 +10,9 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { styled } from "@mui/system";
+import usersStorage from "../utils/functuns";
 
+// styling
 const StyledLink = styled(Link)`
   margin: 5px;
   text-decoration: none;
@@ -29,7 +31,10 @@ const btnstyle = { margin: "8px 0" };
 const textfieldStyle = { margin: "5px 0" };
 
 function Registration() {
+  // variables
+  const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
+    // id: "",
     uName: "",
     email: "",
     pass: "",
@@ -42,6 +47,7 @@ function Registration() {
     confirmPassError: "",
   });
 
+  // functions
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await fetch("http://localhost:3001/registration", {
@@ -52,10 +58,14 @@ function Registration() {
       body: JSON.stringify(userInfo),
     });
     const res = await response.json();
-    console.log(res);
+
     if (res.ok) {
       console.log("User data sent successfully.");
-      // setUserInfo({ uName: "", email: "", pass: "", confirmPass: "" });
+      // usersStorage.set("userId", userInfo.id);
+      usersStorage.set("userName", userInfo.uName);
+      usersStorage.set("password", userInfo.pass);
+      usersStorage.set("email", userInfo.email);
+      navigate("/");
     } else {
       setErrors(res.errors);
     }
@@ -68,6 +78,7 @@ function Registration() {
     }));
   };
 
+  // returned code
   return (
     <Grid>
       <Paper elevation={10} style={paperStyle}>
@@ -86,7 +97,7 @@ function Registration() {
             value={userInfo.uName}
             onChange={handleChange}
             fullWidth
-            error={!!errors.fNameError}
+            error={!!(errors && errors.fNameError)}
             helperText={errors.fNameError}
           />
           <TextField
@@ -97,7 +108,7 @@ function Registration() {
             value={userInfo.email}
             onChange={handleChange}
             fullWidth
-            error={!!errors.emailError}
+            error={!!(errors && errors.emailError)}
             helperText={errors.emailError}
           />
           <TextField
@@ -109,7 +120,7 @@ function Registration() {
             value={userInfo.pass}
             onChange={handleChange}
             fullWidth
-            error={!!errors.passError}
+            error={!!(errors && errors.passError)}
             helperText={errors.passError}
           />
           <TextField
@@ -121,7 +132,7 @@ function Registration() {
             value={userInfo.confirmPass}
             onChange={handleChange}
             fullWidth
-            error={!!errors.confirmPassError}
+            error={!!(errors && errors.confirmPassError)}
             helperText={errors.confirmPassError}
           />
           <Button
