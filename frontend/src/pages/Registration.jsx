@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { styled } from "@mui/system";
+import usersStorage from "../utils/functuns";
 
 // styling
 const StyledLink = styled(Link)`
@@ -33,6 +34,7 @@ function Registration() {
   // variables
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
+    // id: "",
     uName: "",
     email: "",
     pass: "",
@@ -59,6 +61,10 @@ function Registration() {
 
     if (res.ok) {
       console.log("User data sent successfully.");
+      // usersStorage.set("userId", userInfo.id);
+      usersStorage.set("userName", userInfo.uName);
+      usersStorage.set("password", userInfo.pass);
+      usersStorage.set("email", userInfo.email);
       navigate("/");
     } else {
       setErrors(res.errors);
@@ -114,7 +120,7 @@ function Registration() {
             value={userInfo.pass}
             onChange={handleChange}
             fullWidth
-            error={!!(errors && errors.fNameError)}
+            error={!!(errors && errors.passError)}
             helperText={errors.passError}
           />
           <TextField

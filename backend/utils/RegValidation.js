@@ -1,9 +1,9 @@
-export default class Validator {
+export default class RegValidator {
   static validate(usersData) {
-    const fNameError = Validator.checkingUserName(usersData.uName);
-    const emailError = Validator.checkingEmail(usersData.email);
-    const passError = Validator.checkingPassword(usersData.pass);
-    const confirmPassError = Validator.confirmingPassword(
+    const fNameError = RegValidator.checkingUserName(usersData.uName);
+    const emailError = RegValidator.checkingEmail(usersData.email);
+    const passError = RegValidator.checkingPassword(usersData.pass);
+    const confirmPassError = RegValidator.confirmingPassword(
       usersData.pass,
       usersData.confirmPass
     );

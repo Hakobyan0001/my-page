@@ -1,6 +1,9 @@
+// task: nodejs voncen fileum info pahum
+
 import express from "express";
 import cors from "cors";
-import Validator from "./utils/validation.js";
+import RegValidator from "./utils/RegValidation.js";
+import LogValidator from "./utils/LogValidation.js";
 
 const app = express();
 const port = 3001;
@@ -14,7 +17,7 @@ app.use(
 app.use(express.json());
 
 app.post("/registration", (req, res) => {
-  let errors = Validator.validate(req.body);
+  let errors = RegValidator.validate(req.body);
   if (
     errors.fNameError ||
     errors.emailError ||
@@ -29,12 +32,26 @@ app.post("/registration", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  let errors = Validator.validate(req.body);
-  if (req.body.uName !== users.uName || req.body.pass !== users.pass) {
+  let errors = LogValidator.validate(req.body);
+  let possibleUser = users.find((user) => {
+    if (user.uName === req.body.uName && user.pass === req.body.pass) {
+      return true;
+    }
+    return false;
+  });
+  if (!possibleUser) {
     res.json({ errors, ok: false });
     return;
   }
-  res.json({ data: req.body, ok: true });
+
+  res.json({
+    data: {
+      username: possibleUser.uName,
+      email: possibleUser.email,
+      id: possibleUser.id,
+    },
+    ok: true,
+  });
 });
 
 app.get("/users", (req, res) => {

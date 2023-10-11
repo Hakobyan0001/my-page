@@ -1,3 +1,5 @@
+// task: ete login exaca mtnuma home page ete che mtnuma login page, ogtagorcel localstorage
+
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { styled } from "@mui/system";
@@ -27,7 +29,12 @@ export default function Home() {
     <div>
       <h1>Welcome to the Home Page</h1>
       {users.map((e) => {
-        return <h3> username: {e.uName} </h3>;
+        return (
+          <h3>
+            {" "}
+            username: {e.uName} id: {e.id} email: {e.email}
+          </h3>
+        );
       })}
       <StyledLink to="/login">Go to Login</StyledLink>
       <StyledLink to="/registration">Go to Registration</StyledLink>
