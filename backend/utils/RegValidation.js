@@ -1,14 +1,14 @@
 export default class RegValidator {
   static validate(usersData) {
-    const fNameError = RegValidator.checkingUserName(usersData.uName);
+    const uNameError = RegValidator.checkingUserName(usersData.userName);
     const emailError = RegValidator.checkingEmail(usersData.email);
-    const passError = RegValidator.checkingPassword(usersData.pass);
-    const confirmPassError = RegValidator.confirmingPassword(
-      usersData.pass,
-      usersData.confirmPass
+    const passwordError = RegValidator.checkingPassword(usersData.password);
+    const confirmPasswordError = RegValidator.confirmingPassword(
+      usersData.password,
+      usersData.confirmPassword
     );
 
-    return { fNameError, emailError, passError, confirmPassError };
+    return { uNameError, emailError, passwordError, confirmPasswordError };
   }
 
   static checkingUserName(name) {
@@ -50,8 +50,10 @@ export default class RegValidator {
     if (password && confirmPassword) {
       if (password !== confirmPassword) {
         return "Passwords Don't Match";
+      } else {
+        return "";
       }
     }
-    return "";
+    return "Please enter password";
   }
 }

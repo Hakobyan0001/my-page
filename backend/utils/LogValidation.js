@@ -1,9 +1,9 @@
 export default class LogValidator {
   static validate(usersData) {
-    const fNameError = LogValidator.checkingUserName(usersData.uName);
-    const passError = LogValidator.checkingPassword(usersData.pass);
+    const userNameError = LogValidator.checkingUserName(usersData.userName);
+    const passwordError = LogValidator.checkingPassword(usersData.password);
 
-    return { fNameError, passError };
+    return { userNameError, passwordError };
   }
 
   static checkingUserName(name) {
