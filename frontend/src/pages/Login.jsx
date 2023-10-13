@@ -18,6 +18,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { styled } from "@mui/system";
+import usersStorage from "../utils/functions";
 
 const StyledLink = styled(Link)`
   margin: 5px;
@@ -37,11 +38,12 @@ const btnstyle = { margin: "8px 0" };
 const textfieldStyle = { margin: "5px 0" };
 
 function Login() {
+  usersStorage.clear();
   const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState({ uName: "", pass: "" });
+  const [userInfo, setUserInfo] = useState({ userName: "", password: "" });
   const [errors, setErrors] = useState({
-    fNameError: "",
-    passError: "",
+    userNameError: "",
+    passwordError: "",
   });
   const [showPassword, setShowPassword] = useState(false);
 
@@ -58,6 +60,7 @@ function Login() {
     const res = await response.json();
     if (res.ok) {
       console.log("User data sent successfully.");
+      usersStorage.set("user", res.data);
       navigate("/");
     } else {
       setErrors(res.errors);
@@ -78,7 +81,6 @@ function Login() {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-  console.log(showPassword);
   return (
     <Grid>
       <Paper elevation={10} style={paperStyle}>
@@ -91,24 +93,24 @@ function Login() {
         <form onSubmit={handleSubmit}>
           <TextField
             style={textfieldStyle}
-            name="uName"
-            label="Username"
+            name="userName"
+            label="UserName"
             placeholder="Enter username"
-            value={userInfo.uName}
+            value={userInfo.userName}
             onChange={handleChange}
             fullWidth
-            error={!!(errors && errors.fNameError)}
-            helperText={errors.fNameError}
+            error={!!(errors && errors.userNameError)}
+            helperText={errors.userNameError}
           />
           <FilledInput
             id="outlined-basic"
             variant="outlined"
-            name="pass"
+            name="password"
             label="Password"
             placeholder="Enter password"
             type={showPassword ? "text" : "password"}
             onChange={handleChange}
-            value={userInfo.pass}
+            value={userInfo.password}
             fullWidth
             endAdornment={
               <InputAdornment position="end">
@@ -121,8 +123,8 @@ function Login() {
                 </IconButton>
               </InputAdornment>
             }
-            error={!!(errors && errors.passError)}
-            helperText={errors.passError}
+            error={!!(errors && errors.passwordError)}
+            helperText={errors.passwordError}
           />
           <FormControlLabel
             control={<Checkbox name="checkedB" color="primary" />}

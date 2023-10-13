@@ -7,6 +7,9 @@ class Store {
     const value = localStorage.getItem(key);
     return JSON.parse(value);
   }
+  clear() {
+    localStorage.clear();
+  }
 }
 const usersStorage = new Store();
 

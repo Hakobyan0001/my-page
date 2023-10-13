@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { styled } from "@mui/system";
-import usersStorage from "../utils/functuns";
 
 // styling
 const StyledLink = styled(Link)`
@@ -34,17 +33,16 @@ function Registration() {
   // variables
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
-    // id: "",
-    uName: "",
+    userName: "",
     email: "",
-    pass: "",
-    confirmPass: "",
+    password: "",
+    confirmPassword: "",
   });
   const [errors, setErrors] = useState({
-    fNameError: "",
+    uNameError: "",
     emailError: "",
-    passError: "",
-    confirmPassError: "",
+    passwordError: "",
+    confirmPasswordError: "",
   });
 
   // functions
@@ -58,13 +56,8 @@ function Registration() {
       body: JSON.stringify(userInfo),
     });
     const res = await response.json();
-
     if (res.ok) {
       console.log("User data sent successfully.");
-      // usersStorage.set("userId", userInfo.id);
-      usersStorage.set("userName", userInfo.uName);
-      usersStorage.set("password", userInfo.pass);
-      usersStorage.set("email", userInfo.email);
       navigate("/");
     } else {
       setErrors(res.errors);
@@ -91,14 +84,14 @@ function Registration() {
         <form onSubmit={handleSubmit}>
           <TextField
             style={textfieldStyle}
-            name="uName"
+            name="userName"
             label="Username"
             placeholder="Enter username"
-            value={userInfo.uName}
+            value={userInfo.userName}
             onChange={handleChange}
             fullWidth
-            error={!!(errors && errors.fNameError)}
-            helperText={errors.fNameError}
+            error={!!(errors && errors.uNameError)}
+            helperText={errors.uNameError}
           />
           <TextField
             style={textfieldStyle}
@@ -113,27 +106,27 @@ function Registration() {
           />
           <TextField
             style={textfieldStyle}
-            name="pass"
-            label="Password"
+            name="password"
+            label="password"
             placeholder="Enter password"
             type="password"
-            value={userInfo.pass}
+            value={userInfo.password}
             onChange={handleChange}
             fullWidth
-            error={!!(errors && errors.passError)}
-            helperText={errors.passError}
+            error={!!(errors && errors.passwordError)}
+            helperText={errors.passwordError}
           />
           <TextField
             style={textfieldStyle}
-            name="confirmPass"
-            label="Confirm Password"
+            name="confirmPassword"
+            label="Confirm password"
             placeholder="Confirm password"
             type="password"
-            value={userInfo.confirmPass}
+            value={userInfo.confirmPassword}
             onChange={handleChange}
             fullWidth
-            error={!!(errors && errors.confirmPassError)}
-            helperText={errors.confirmPassError}
+            error={!!(errors && errors.confirmPasswordError)}
+            helperText={errors.confirmPasswordError}
           />
           <Button
             type="submit"

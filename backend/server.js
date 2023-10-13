@@ -1,14 +1,32 @@
-// task: nodejs voncen fileum info pahum
-
 import express from "express";
 import cors from "cors";
 import RegValidator from "./utils/RegValidation.js";
 import LogValidator from "./utils/LogValidation.js";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { v4 as uuidv4 } from "uuid";
 
 const app = express();
 const port = 3001;
 
-let users = [];
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+let data;
+try {
+  data = fs.readFileSync(
+    path.join(__dirname, "..", "backend", "data.json"),
+    "utf-8"
+  );
+  if (!data) {
+    console.error("data.json is empty.");
+  }
+} catch (err) {
+  console.error("Error reading data.json:", err);
+}
+let usersData = JSON.parse(data);
+
 app.use(
   cors({
     origin: "*",
@@ -19,34 +37,52 @@ app.use(express.json());
 app.post("/registration", (req, res) => {
   let errors = RegValidator.validate(req.body);
   if (
-    errors.fNameError ||
+    errors.uNameError ||
     errors.emailError ||
-    errors.passError ||
-    errors.confirmPassError
+    errors.passwordError ||
+    errors.confirmPasswordError
   ) {
     res.json({ errors, ok: false });
     return;
   }
-  users.push(req.body);
+
+  if (!Array.isArray(usersData)) {
+    usersData = [];
+  }
+  usersData.push({
+    id: uuidv4(),
+    userName: req.body.userName,
+    email: req.body.email,
+    password: req.body.password,
+  });
+  const jsonString = JSON.stringify(usersData);
+  fs.writeFileSync("data.json", jsonString, "utf-8", (err) => {
+    if (err) throw err;
+    console.log("Data added to file");
+  });
+
   res.json({ data: req.body, ok: true });
 });
 
 app.post("/login", (req, res) => {
   let errors = LogValidator.validate(req.body);
-  let possibleUser = users.find((user) => {
-    if (user.uName === req.body.uName && user.pass === req.body.pass) {
+  let possibleUser = usersData.find((user) => {
+    if (
+      user.userName === req.body.userName &&
+      user.password === req.body.password
+    ) {
       return true;
     }
     return false;
   });
+
   if (!possibleUser) {
     res.json({ errors, ok: false });
     return;
   }
-
   res.json({
     data: {
-      username: possibleUser.uName,
+      userName: possibleUser.userName,
       email: possibleUser.email,
       id: possibleUser.id,
     },
@@ -54,8 +90,8 @@ app.post("/login", (req, res) => {
   });
 });
 
-app.get("/users", (req, res) => {
-  res.json(users);
+app.get("/usersData", (req, res) => {
+  res.json(usersData);
 });
 
 app.listen(port, () => {

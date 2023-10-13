@@ -1,8 +1,10 @@
-// task: ete login exaca mtnuma home page ete che mtnuma login page, ogtagorcel localstorage
-
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { styled } from "@mui/system";
+import usersStorage from "../utils/functions";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { Button, Fab } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 
 const StyledLink = styled(Link)`
   margin: 5px;
@@ -13,31 +15,39 @@ const StyledLink = styled(Link)`
   }
 `;
 export default function Home() {
-  const [users, setUsers] = useState([]);
+  const [user, setUser] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:3001/users")
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setUsers(data);
-      });
+    const savedUser = usersStorage.get("user");
+    if (savedUser?.id) {
+      setLoading(false);
+      setUser(savedUser);
+      return;
+    }
+    navigate("/login");
   }, []);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
-      <h1>Welcome to the Home Page</h1>
-      {users.map((e) => {
-        return (
-          <h3>
-            {" "}
-            username: {e.uName} id: {e.id} email: {e.email}
-          </h3>
-        );
-      })}
-      <StyledLink to="/login">Go to Login</StyledLink>
-      <StyledLink to="/registration">Go to Registration</StyledLink>
+      <div>
+        <h1>Welcome back {user.userName}</h1>
+      </div>
+      <div>
+        {" "}
+        <StyledLink to="/login">
+          Logout <LogoutIcon></LogoutIcon>
+        </StyledLink>
+      </div>
+      <div>
+        {" "}
+        <Button variant="contained">Add Footballer</Button>
+      </div>
     </div>
   );
 }
