@@ -3,8 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { styled } from "@mui/system";
 import usersStorage from "../utils/functions";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { Button, Fab } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import Container from "./Container";
 
 const StyledLink = styled(Link)`
   margin: 5px;
@@ -17,7 +16,6 @@ const StyledLink = styled(Link)`
 export default function Home() {
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,20 +32,19 @@ export default function Home() {
   }
 
   return (
-    <div>
+    <>
       <div>
-        <h1>Welcome back {user.userName}</h1>
+        <div>
+          <h1>Welcome back {user.userName}</h1>
+        </div>
+        <div>
+          {" "}
+          <StyledLink to="/login">
+            Logout <LogoutIcon></LogoutIcon>
+          </StyledLink>
+        </div>
       </div>
-      <div>
-        {" "}
-        <StyledLink to="/login">
-          Logout <LogoutIcon></LogoutIcon>
-        </StyledLink>
-      </div>
-      <div>
-        {" "}
-        <Button variant="contained">Add Footballer</Button>
-      </div>
-    </div>
+      <Container />
+    </>
   );
 }
