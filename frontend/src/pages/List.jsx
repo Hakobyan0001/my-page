@@ -15,18 +15,35 @@ const StyledDiv = styled("div")(({ theme }) => ({
   width: 330,
 }));
 
-export default function NameList({ list }) {
-  const [currentList, setCurrentList] = useState([]);
+export default function NameList() {
+  const [footballersList, setFootballersList] = useState([]);
   useEffect(() => {
-    setCurrentList(list);
-  }, [list]);
-
-  const handleDelete = (index) => {
-    setCurrentList(
-      currentList.filter((name, id) => {
-        return id !== index;
+    fetch("http://localhost:3001/footballersData")
+      .then((response) => response.json())
+      .then((data) => {
+        setFootballersList(data);
       })
-    );
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, [footballersList]);
+
+  const handleDelete = (id) => {
+    fetch(`http://localhost:3001/footballersData/${id}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (response.ok) {
+          setFootballersList((prevList) =>
+            prevList.filter((footballer) => footballer.footballerId !== id)
+          );
+        } else {
+          console.error("Error deleting footballer");
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting footballer:", error);
+      });
   };
 
   return (
@@ -40,25 +57,29 @@ export default function NameList({ list }) {
       </Typography>
       <StyledDiv>
         <List>
-          {currentList.map((value, index) => (
-            <ListItem
-              component="div"
-              key={index}
-              sx={{ border: "1px solid #808080" }}
-              disablePadding
-            >
-              <ListItemText
-                primary={index + 1 + ". " + value.fullName}
-                sx={{ padding: "5px" }}
-              />
-              <IconButton
-                aria-label="delete"
-                onClick={() => handleDelete(index)}
+          {Array.isArray(footballersList) ? (
+            footballersList.map((footballer, index) => (
+              <ListItem
+                component="div"
+                key={footballer.footballerId}
+                sx={{ border: "1px solid #808080" }}
+                disablePadding
               >
-                <DeleteOutlineIcon />
-              </IconButton>
-            </ListItem>
-          ))}
+                <ListItemText
+                  primary={index + 1 + ". " + footballer.fullName}
+                  sx={{ padding: "5px" }}
+                />
+                <IconButton
+                  aria-label="delete"
+                  onClick={() => handleDelete(footballer.footballerId, index)}
+                >
+                  <DeleteOutlineIcon />
+                </IconButton>
+              </ListItem>
+            ))
+          ) : (
+            <Typography variant="body2">No footballers available.</Typography>
+          )}
         </List>
       </StyledDiv>
     </Grid>

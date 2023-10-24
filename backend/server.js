@@ -6,6 +6,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { v4 as uuidv4 } from "uuid";
+import AddValidator from "./utils/AddValidation.js";
 
 const app = express();
 const port = 3001;
@@ -14,6 +15,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 let data;
+let footballersListData;
 try {
   data = fs.readFileSync(
     path.join(__dirname, "..", "backend", "data.json"),
@@ -25,8 +27,21 @@ try {
 } catch (err) {
   console.error("Error reading data.json:", err);
 }
-let usersData = JSON.parse(data);
 
+try {
+  footballersListData = fs.readFileSync(
+    path.join(__dirname, "..", "backend", "footballersList.json"),
+    "utf-8"
+  );
+  if (!footballersListData) {
+    console.error("footballersList.json is empty.");
+  }
+} catch (err) {
+  console.error("Error reading footballersList.json:", err);
+}
+
+let usersData = JSON.parse(data);
+let footballersData = JSON.parse(footballersListData);
 app.use(
   cors({
     origin: "*",
@@ -90,8 +105,51 @@ app.post("/login", (req, res) => {
   });
 });
 
+app.post("/", (req, res) => {
+  let error = AddValidator.validate(req.body);
+  if (error) {
+    res.json(error);
+    return;
+  }
+  if (!Array.isArray(footballersData)) {
+    footballersData = [];
+  }
+  footballersData.push({
+    userId: "",
+    footballerId: uuidv4(),
+    fullName: req.body.fullName,
+  });
+
+  const jsonString = JSON.stringify(footballersData);
+  fs.writeFileSync("footballersList.json", jsonString, "utf-8", (err) => {
+    if (err) throw err;
+    console.log("Data added to file");
+  });
+
+  res.json({ data: req.body });
+});
+
+app.delete("/footballersData/:id", (req, res) => {
+  const footballerId = req.params.id;
+  const index = footballersData.findIndex(
+    (footballer) => footballer.footballerId === footballerId
+  );
+
+  if (index === -1) {
+    return res.status(404).json({ error: "Footballer not found" });
+  }
+
+  footballersData.splice(index, 1);
+
+  res.json({ message: "Footballer deleted successfully" });
+});
+
 app.get("/usersData", (req, res) => {
   res.json(usersData);
+});
+
+app.get("/footballersData", (req, res) => {
+  res.json(footballersData);
 });
 
 app.listen(port, () => {
