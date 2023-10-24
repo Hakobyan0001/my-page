@@ -4,11 +4,11 @@ export default class AddValidator {
     return fullNameError;
   }
   static checkingFullName(fullName) {
+    const alphabet = /^[A-Za-z]+$/;
     if (!fullName) {
       return "Please enter fullname";
     }
-    const alphabet = /^[A-Za-z]+$/;
-    if (alphabet.test(fullName)) {
+    if (!alphabet.test(fullName)) {
       return "Please enter valid fullname. Use only alphabets";
     }
     return "";

@@ -12,11 +12,27 @@ import { Box } from "@mui/system";
 export default function Container() {
   const [footballer, setFootballer] = useState({ fullName: "" });
   const [footballersList, setFootballersList] = useState([]);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setFootballersList((prevList) => [...prevList, footballer]);
-    setFootballer(() => ({ fullName: "" }));
+
+    const response = await fetch("http://localhost:3001", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(footballer),
+    });
+    const res = await response.json();
+
+    if (res) {
+      console.log("User data sent successfully.");
+      setFootballersList((prevList) => [...prevList, footballer]);
+      setFootballer(() => ({ fullName: "" }));
+    } else {
+      setError(res.error);
+    }
   };
 
   const handleChange = (e) => {
@@ -47,8 +63,8 @@ export default function Container() {
                 value={footballer.fullName}
                 onChange={handleChange}
                 fullWidth
-                // error={!!(errors && errors.userNameError)}
-                // helperText={errors.userNameError}
+                error={!!(error && error)}
+                helperText={error}
               />
               <Button
                 type="submit"
@@ -63,7 +79,7 @@ export default function Container() {
           </AccordionDetails>
         </Accordion>
       </Grid>
-      <NameList list={footballersList} />
+      <NameList />
     </Box>
   );
 }
