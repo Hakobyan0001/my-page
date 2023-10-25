@@ -95,6 +95,7 @@ app.post("/login", (req, res) => {
     res.json({ errors, ok: false });
     return;
   }
+
   res.json({
     data: {
       userName: possibleUser.userName,
@@ -106,7 +107,8 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/", (req, res) => {
-  let error = AddValidator.validate(req.body);
+  console.log(req.body);
+  let error = AddValidator.validate(req.body.footballer);
   if (error) {
     res.json(error);
     return;
@@ -115,9 +117,9 @@ app.post("/", (req, res) => {
     footballersData = [];
   }
   footballersData.push({
-    userId: "",
+    ownerId: req.body.ownerId,
     footballerId: uuidv4(),
-    fullName: req.body.fullName,
+    fullName: req.body.footballer.fullName,
   });
 
   const jsonString = JSON.stringify(footballersData);

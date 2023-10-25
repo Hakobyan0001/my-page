@@ -8,12 +8,14 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Button, TextField } from "@mui/material";
 import NameList from "./List";
 import { Box } from "@mui/system";
+import usersStorage from "../utils/functions";
 
 export default function Container() {
   const [footballer, setFootballer] = useState({ fullName: "" });
   const [footballersList, setFootballersList] = useState([]);
   const [error, setError] = useState("");
-
+  const ownerId = usersStorage.get("user").id;
+  const requestBody = { footballer, ownerId };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -22,7 +24,8 @@ export default function Container() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(footballer),
+
+      body: JSON.stringify(requestBody),
     });
     const res = await response.json();
 
