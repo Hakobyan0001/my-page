@@ -4,6 +4,7 @@ import { styled } from "@mui/system";
 import usersStorage from "../utils/functions";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Container from "./Container";
+import NameList from "./List";
 
 const StyledLink = styled(Link)`
   margin: 5px;
@@ -17,6 +18,8 @@ export default function Home() {
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [footballer, setFootballer] = useState({ fullName: "" });
+  const [footballersList, setFootballersList] = useState([]);
 
   useEffect(() => {
     const savedUser = usersStorage.get("user");
@@ -44,7 +47,15 @@ export default function Home() {
           </StyledLink>
         </div>
       </div>
-      <Container />
+      <Container
+        setFootballersList={setFootballersList}
+        footballer={footballer}
+        setFootballer={setFootballer}
+      />
+      <NameList
+        footballersList={footballersList}
+        setFootballersList={setFootballersList}
+      />
     </>
   );
 }
