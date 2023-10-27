@@ -6,13 +6,14 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Button, TextField } from "@mui/material";
-import NameList from "./List";
 import { Box } from "@mui/system";
 import usersStorage from "../utils/functions";
 
-export default function Container() {
-  const [footballer, setFootballer] = useState({ fullName: "" });
-  const [footballersList, setFootballersList] = useState([]);
+export default function Container({
+  setFootballersList,
+  footballer,
+  setFootballer,
+}) {
   const [error, setError] = useState("");
   const ownerId = usersStorage.get("user").id;
   const requestBody = { footballer, ownerId };
@@ -82,7 +83,6 @@ export default function Container() {
           </AccordionDetails>
         </Accordion>
       </Grid>
-      <NameList />
     </Box>
   );
 }

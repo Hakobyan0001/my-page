@@ -7,26 +7,23 @@ import {
   Typography,
 } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import styled from "@emotion/styled";
+import request from "../service/request";
 
 const StyledDiv = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   width: 330,
 }));
 
-export default function NameList() {
-  const [footballersList, setFootballersList] = useState([]);
+export default function NameList({ footballersList, setFootballersList }) {
   useEffect(() => {
-    fetch("http://localhost:3001/footballersData")
-      .then((response) => response.json())
-      .then((data) => {
-        setFootballersList(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, [footballersList]);
+    async function fetchData() {
+      const data = await request.get("/footballersData");
+      setFootballersList(data);
+    }
+    fetchData();
+  }, []);
 
   const handleDelete = (id) => {
     fetch(`http://localhost:3001/footballersData/${id}`, {
@@ -37,6 +34,7 @@ export default function NameList() {
           setFootballersList((prevList) =>
             prevList.filter((footballer) => footballer.footballerId !== id)
           );
+          console.log(footballersList);
         } else {
           console.error("Error deleting footballer");
         }
@@ -45,7 +43,6 @@ export default function NameList() {
         console.error("Error deleting footballer:", error);
       });
   };
-
   return (
     <Grid sx={{ marginLeft: "200px" }}>
       <Typography
