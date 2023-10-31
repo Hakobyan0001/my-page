@@ -8,13 +8,7 @@ import {
 } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useEffect } from "react";
-import styled from "@emotion/styled";
 import request from "../service/request";
-
-const StyledDiv = styled("div")(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
-  width: 330,
-}));
 
 export default function NameList({ footballersList, setFootballersList }) {
   useEffect(() => {
@@ -23,62 +17,47 @@ export default function NameList({ footballersList, setFootballersList }) {
       setFootballersList(data);
     }
     fetchData();
-  }, []);
+  }, [footballersList]);
 
   const handleDelete = (id) => {
-    fetch(`http://localhost:3001/footballersData/${id}`, {
-      method: "DELETE",
-    })
-      .then((response) => {
-        if (response.ok) {
-          setFootballersList((prevList) =>
-            prevList.filter((footballer) => footballer.footballerId !== id)
-          );
-          console.log(footballersList);
-        } else {
-          console.error("Error deleting footballer");
-        }
-      })
-      .catch((error) => {
-        console.error("Error deleting footballer:", error);
-      });
+    async function fetchData() {
+      await request.delete(`/footballersData/${id}`);
+      setFootballersList((prevList) =>
+        prevList.filter((footballer) => footballer.footballerId !== id)
+      );
+    }
+    fetchData();
   };
   return (
-    <Grid sx={{ marginLeft: "200px" }}>
-      <Typography
-        sx={{ textAlign: "center", mb: "5px" }}
-        variant="h6"
-        component="div"
-      >
+    <Grid className="listGrid">
+      <Typography variant="h6" component="div">
         Footballers list{" "}
       </Typography>
-      <StyledDiv>
-        <List>
-          {Array.isArray(footballersList) ? (
-            footballersList.map((footballer, index) => (
-              <ListItem
-                component="div"
-                key={footballer.footballerId}
-                sx={{ border: "1px solid #808080" }}
-                disablePadding
+      <List className="list">
+        {Array.isArray(footballersList) ? (
+          footballersList.map((footballer, index) => (
+            <ListItem
+              className="listItem"
+              component="div"
+              key={footballer.footballerId}
+              disablePadding
+            >
+              <ListItemText
+                className="listItemText"
+                primary={index + 1 + ". " + footballer.fullName}
+              />
+              <IconButton
+                aria-label="delete"
+                onClick={() => handleDelete(footballer.footballerId)}
               >
-                <ListItemText
-                  primary={index + 1 + ". " + footballer.fullName}
-                  sx={{ padding: "5px" }}
-                />
-                <IconButton
-                  aria-label="delete"
-                  onClick={() => handleDelete(footballer.footballerId, index)}
-                >
-                  <DeleteOutlineIcon />
-                </IconButton>
-              </ListItem>
-            ))
-          ) : (
-            <Typography variant="body2">No footballers available.</Typography>
-          )}
-        </List>
-      </StyledDiv>
+                <DeleteOutlineIcon />
+              </IconButton>
+            </ListItem>
+          ))
+        ) : (
+          <Typography variant="body2">No footballers available.</Typography>
+        )}
+      </List>
     </Grid>
   );
 }

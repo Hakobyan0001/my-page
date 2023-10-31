@@ -11,31 +11,12 @@ import {
   IconButton,
 } from "@mui/material";
 import FilledInput from "@mui/material/FilledInput";
-
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import { styled } from "@mui/system";
 import usersStorage from "../utils/functions";
-
-const StyledLink = styled(Link)`
-  margin: 5px;
-  text-decoration: none;
-  color: black;
-  &:hover {
-    color: blue;
-  }
-`;
-const paperStyle = {
-  padding: 20,
-  width: 280,
-  margin: "20px auto",
-};
-const avatarStyle = { backgroundColor: "#1bbd7e" };
-const btnstyle = { margin: "8px 0" };
-const textfieldStyle = { margin: "5px 0" };
 
 function Login() {
   usersStorage.clear();
@@ -83,16 +64,16 @@ function Login() {
   };
   return (
     <Grid>
-      <Paper elevation={10} style={paperStyle}>
-        <Grid align="center">
-          <Avatar style={avatarStyle}>
+      <Paper className="paper" elevation={10}>
+        <Grid className="grid">
+          <Avatar className="avatar">
             <LockOutlinedIcon />
           </Avatar>
           <h2>Sign In</h2>
         </Grid>
         <form onSubmit={handleSubmit}>
           <TextField
-            style={textfieldStyle}
+            className="textField"
             name="userName"
             label="UserName"
             placeholder="Enter username"
@@ -131,23 +112,29 @@ function Login() {
             label="Remember me"
           />
           <Button
+            className="button"
             type="submit"
             color="primary"
             variant="contained"
-            style={btnstyle}
             fullWidth
           >
             Sign in
           </Button>
         </form>
         <Typography>
-          <StyledLink to="#">Forgot password ?</StyledLink>
+          <Link className="link" to="#">
+            Forgot password ?
+          </Link>
         </Typography>
         <Typography>
-          <StyledLink to="/registration">Create Account</StyledLink>
+          <Link className="link" to="/registration">
+            Create Account
+          </Link>
         </Typography>
         <Typography>
-          <StyledLink to="/">Go to home</StyledLink>
+          <Link className="link" to="/">
+            Go to home
+          </Link>
         </Typography>
       </Paper>
     </Grid>

@@ -43,7 +43,7 @@ app.post("/registration", (req, res) => {
 
 app.post("/login", (req, res) => {
   let errors = LogValidator.validate(req.body);
-  const usersData = UserStorage.getAllData();
+  const usersData = UserStorage.getUserData();
 
   let possibleUser = usersData.find((user) => {
     if (
@@ -99,11 +99,13 @@ app.get("/usersData", (req, res) => {
 
 app.get("/footballersData", (req, res) => {
   let footballersData = [];
-  if (req.body.ownerId) {
-    footballersData = FbStorage.getDatabyId(req.body.ownerId);
+  const ownerId = req.headers.authorization;
+  if (ownerId) {
+    footballersData = FbStorage.getDatabyId(ownerId);
+    res.json(footballersData);
+    return;
   }
   footballersData = FbStorage.getAllData();
-
   res.json(footballersData);
 });
 

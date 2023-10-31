@@ -10,10 +10,7 @@ class UserStorage {
     let userData = [];
     try {
       userData = JSON.parse(
-        fs.readFileSync(
-          path.join(__dirname, "..", "backend", "data.json"),
-          "utf-8"
-        )
+        fs.readFileSync(path.join(__dirname, "../", "data.json"), "utf-8")
       );
     } catch (err) {
       console.error("Error reading data.json:", err);

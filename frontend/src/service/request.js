@@ -2,7 +2,7 @@ import usersStorage from "../utils/functions.js";
 
 class Request {
   baseUrl = "http://localhost:3001";
-  async send(url, method, body, headers) {
+  async send(url, method, body) {
     const ownerId = usersStorage.get("user").id;
 
     let params = {
@@ -10,7 +10,7 @@ class Request {
       method,
       headers: {
         "Content-Type": "application/json",
-        Authentication: ownerId,
+        Authorization: ownerId,
       },
     };
     if (body) {

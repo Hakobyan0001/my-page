@@ -1,19 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { styled } from "@mui/system";
 import usersStorage from "../utils/functions";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Container from "./Container";
 import NameList from "./List";
 
-const StyledLink = styled(Link)`
-  margin: 5px;
-  text-decoration: none;
-  color: black;
-  &:hover {
-    color: blue;
-  }
-`;
 export default function Home() {
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
@@ -36,26 +27,27 @@ export default function Home() {
 
   return (
     <>
-      <div>
+      <div id="header">
         <div>
           <h1>Welcome back {user.userName}</h1>
         </div>
-        <div>
-          {" "}
-          <StyledLink to="/login">
+        <div id="logOut">
+          <Link className="link" to="/login">
             Logout <LogoutIcon></LogoutIcon>
-          </StyledLink>
+          </Link>
         </div>
       </div>
-      <Container
-        setFootballersList={setFootballersList}
-        footballer={footballer}
-        setFootballer={setFootballer}
-      />
-      <NameList
-        footballersList={footballersList}
-        setFootballersList={setFootballersList}
-      />
+      <div style={{ display: "flex" }}>
+        <Container
+          setFootballersList={setFootballersList}
+          footballer={footballer}
+          setFootballer={setFootballer}
+        />
+        <NameList
+          footballersList={footballersList}
+          setFootballersList={setFootballersList}
+        />
+      </div>{" "}
     </>
   );
 }

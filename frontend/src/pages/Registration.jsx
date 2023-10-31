@@ -9,28 +9,8 @@ import {
   Typography,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { styled } from "@mui/system";
-
-// styling
-const StyledLink = styled(Link)`
-  margin: 5px;
-  text-decoration: none;
-  color: black;
-  &:hover {
-    color: blue;
-  }
-`;
-const paperStyle = {
-  padding: 20,
-  width: 280,
-  margin: "20px auto",
-};
-const avatarStyle = { backgroundColor: "#1bbd7e" };
-const btnstyle = { margin: "8px 0" };
-const textfieldStyle = { margin: "5px 0" };
 
 function Registration() {
-  // variables
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
     userName: "",
@@ -45,7 +25,6 @@ function Registration() {
     confirmPasswordError: "",
   });
 
-  // functions
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await fetch("http://localhost:3001/registration", {
@@ -71,19 +50,18 @@ function Registration() {
     }));
   };
 
-  // returned code
   return (
     <Grid>
-      <Paper elevation={10} style={paperStyle}>
-        <Grid align="center">
-          <Avatar style={avatarStyle}>
+      <Paper elevation={10} className="paper">
+        <Grid className="grid">
+          <Avatar className="avatar">
             <LockOutlinedIcon />
           </Avatar>
           <h2>Create Account</h2>
         </Grid>
         <form onSubmit={handleSubmit}>
           <TextField
-            style={textfieldStyle}
+            className="textField"
             name="userName"
             label="Username"
             placeholder="Enter username"
@@ -94,7 +72,7 @@ function Registration() {
             helperText={errors.uNameError}
           />
           <TextField
-            style={textfieldStyle}
+            className="textField"
             name="email"
             label="Email"
             placeholder="Enter email"
@@ -105,7 +83,7 @@ function Registration() {
             helperText={errors.emailError}
           />
           <TextField
-            style={textfieldStyle}
+            className="textField"
             name="password"
             label="password"
             placeholder="Enter password"
@@ -117,7 +95,7 @@ function Registration() {
             helperText={errors.passwordError}
           />
           <TextField
-            style={textfieldStyle}
+            className="textField"
             name="confirmPassword"
             label="Confirm password"
             placeholder="Confirm password"
@@ -129,20 +107,24 @@ function Registration() {
             helperText={errors.confirmPasswordError}
           />
           <Button
+            className="button"
             type="submit"
             color="primary"
             variant="contained"
-            style={btnstyle}
             fullWidth
           >
             Create Account
           </Button>
         </form>
         <Typography>
-          <StyledLink to="/login">Have account ?</StyledLink>
+          <Link className="link" to="/login">
+            Have account ?
+          </Link>
         </Typography>
         <Typography>
-          <StyledLink to="/">Go to home</StyledLink>
+          <Link className="link" to="/">
+            Go to home
+          </Link>
         </Typography>
       </Paper>
     </Grid>
