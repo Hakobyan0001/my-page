@@ -17,7 +17,35 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import usersStorage from "../utils/functions";
+import { styled } from "@mui/system";
 
+const StyledLink = styled(Link)({
+  margin: "5px",
+  textDecoration: "none",
+  color: "#19191b",
+  "&:hover": {
+    color: "#605e5e",
+  },
+});
+const StyledPaper = styled(Paper)({
+  padding: 20,
+  width: 280,
+  margin: "20px auto",
+  backgroundColor: "#999999",
+});
+const StyledButton = styled(Button)({
+  margin: "8px 0",
+  backgroundColor: "#19191b",
+  color: "#999999",
+  "&:hover": { backgroundColor: "#999999", color: "#19191b" },
+});
+const StyledTextField = styled(TextField)({ margin: "5px 0" });
+const StyledFilledInput = styled(FilledInput)({
+  backgroundColor: "#999999",
+  borderRadius: "4px",
+  border: "1px solid #767676",
+  ":before": { border: "none" },
+});
 function Login() {
   usersStorage.clear();
   const navigate = useNavigate();
@@ -64,16 +92,15 @@ function Login() {
   };
   return (
     <Grid>
-      <Paper className="paper" elevation={10}>
-        <Grid className="grid">
-          <Avatar className="avatar">
+      <StyledPaper elevation={10}>
+        <Grid align="center">
+          <Avatar sx={{ backgroundColor: "#1bbd7e", margin: "auto" }}>
             <LockOutlinedIcon />
           </Avatar>
           <h2>Sign In</h2>
         </Grid>
         <form onSubmit={handleSubmit}>
-          <TextField
-            className="textField"
+          <StyledTextField
             name="userName"
             label="UserName"
             placeholder="Enter username"
@@ -83,7 +110,7 @@ function Login() {
             error={!!(errors && errors.userNameError)}
             helperText={errors.userNameError}
           />
-          <FilledInput
+          <StyledFilledInput
             id="outlined-basic"
             variant="outlined"
             name="password"
@@ -111,32 +138,25 @@ function Login() {
             control={<Checkbox name="checkedB" color="primary" />}
             label="Remember me"
           />
-          <Button
-            className="button"
+          <StyledButton
             type="submit"
             color="primary"
             variant="contained"
             fullWidth
           >
             Sign in
-          </Button>
+          </StyledButton>
         </form>
         <Typography>
-          <Link className="link" to="#">
-            Forgot password ?
-          </Link>
+          <StyledLink to="#">Forgot password ?</StyledLink>
         </Typography>
         <Typography>
-          <Link className="link" to="/registration">
-            Create Account
-          </Link>
+          <StyledLink to="/registration">Create Account</StyledLink>
         </Typography>
         <Typography>
-          <Link className="link" to="/">
-            Go to home
-          </Link>
+          <StyledLink to="/">Go to home</StyledLink>
         </Typography>
-      </Paper>
+      </StyledPaper>
     </Grid>
   );
 }
