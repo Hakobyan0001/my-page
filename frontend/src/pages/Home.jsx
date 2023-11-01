@@ -4,7 +4,22 @@ import usersStorage from "../utils/functions";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Container from "./Container";
 import NameList from "./List";
+import { Box, styled } from "@mui/system";
+import { Typography } from "@mui/material";
 
+const StyledLink = styled(Link)({
+  margin: "5px",
+  textDecoration: "none",
+  color: "#999999",
+  "&:hover": {
+    color: "#19191b",
+  },
+});
+const StyledHeader = styled("div")({
+  backgroundColor: "#8a2be2",
+  display: "flex",
+  justifyContent: "space-between",
+});
 export default function Home() {
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
@@ -27,17 +42,17 @@ export default function Home() {
 
   return (
     <>
-      <div id="header">
-        <div>
-          <h1>Welcome back {user.userName}</h1>
-        </div>
-        <div id="logOut">
-          <Link className="link" to="/login">
+      <StyledHeader>
+        <Box>
+          <Typography variant="h3">Welcome back {user.userName}</Typography>
+        </Box>
+        <Box sx={{ paddingTop: "30px" }}>
+          <StyledLink to="/login">
             Logout <LogoutIcon></LogoutIcon>
-          </Link>
-        </div>
-      </div>
-      <div style={{ display: "flex" }}>
+          </StyledLink>
+        </Box>
+      </StyledHeader>
+      <Box sx={{ display: "flex" }}>
         <Container
           setFootballersList={setFootballersList}
           footballer={footballer}
@@ -47,7 +62,7 @@ export default function Home() {
           footballersList={footballersList}
           setFootballersList={setFootballersList}
         />
-      </div>{" "}
+      </Box>{" "}
     </>
   );
 }

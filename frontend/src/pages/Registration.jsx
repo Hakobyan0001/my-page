@@ -9,6 +9,29 @@ import {
   Typography,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { styled } from "@mui/system";
+
+const StyledLink = styled(Link)({
+  margin: "5px",
+  textDecoration: "none",
+  color: "#19191b",
+  "&:hover": {
+    color: "#605e5e",
+  },
+});
+const StyledPaper = styled(Paper)({
+  padding: 20,
+  width: 280,
+  margin: "20px auto",
+  backgroundColor: "#999999",
+});
+const StyledButton = styled(Button)({
+  margin: "8px 0",
+  backgroundColor: "#19191b",
+  color: "#999999",
+  "&:hover": { backgroundColor: "#999999", color: "#19191b" },
+});
+const StyledTextField = styled(TextField)({ margin: "5px 0" });
 
 function Registration() {
   const navigate = useNavigate();
@@ -52,16 +75,15 @@ function Registration() {
 
   return (
     <Grid>
-      <Paper elevation={10} className="paper">
+      <StyledPaper elevation={10}>
         <Grid className="grid">
-          <Avatar className="avatar">
+          <Avatar sx={{ backgroundColor: "#1bbd7e", margin: "auto" }}>
             <LockOutlinedIcon />
           </Avatar>
           <h2>Create Account</h2>
         </Grid>
         <form onSubmit={handleSubmit}>
-          <TextField
-            className="textField"
+          <StyledTextField
             name="userName"
             label="Username"
             placeholder="Enter username"
@@ -71,8 +93,7 @@ function Registration() {
             error={!!(errors && errors.uNameError)}
             helperText={errors.uNameError}
           />
-          <TextField
-            className="textField"
+          <StyledTextField
             name="email"
             label="Email"
             placeholder="Enter email"
@@ -82,8 +103,7 @@ function Registration() {
             error={!!(errors && errors.emailError)}
             helperText={errors.emailError}
           />
-          <TextField
-            className="textField"
+          <StyledTextField
             name="password"
             label="password"
             placeholder="Enter password"
@@ -94,8 +114,7 @@ function Registration() {
             error={!!(errors && errors.passwordError)}
             helperText={errors.passwordError}
           />
-          <TextField
-            className="textField"
+          <StyledTextField
             name="confirmPassword"
             label="Confirm password"
             placeholder="Confirm password"
@@ -106,27 +125,22 @@ function Registration() {
             error={!!(errors && errors.confirmPasswordError)}
             helperText={errors.confirmPasswordError}
           />
-          <Button
-            className="button"
+          <StyledButton
             type="submit"
             color="primary"
             variant="contained"
             fullWidth
           >
             Create Account
-          </Button>
+          </StyledButton>
         </form>
         <Typography>
-          <Link className="link" to="/login">
-            Have account ?
-          </Link>
+          <StyledLink to="/login">Have account ?</StyledLink>
         </Typography>
         <Typography>
-          <Link className="link" to="/">
-            Go to home
-          </Link>
+          <StyledLink to="/">Go to home</StyledLink>
         </Typography>
-      </Paper>
+      </StyledPaper>
     </Grid>
   );
 }

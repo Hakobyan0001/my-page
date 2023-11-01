@@ -1,15 +1,21 @@
 import React from "react";
-import Grid from "@mui/material/Unstable_Grid2";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Button, TextField } from "@mui/material";
-import { Box } from "@mui/system";
+import { Box, styled } from "@mui/system";
 import usersStorage from "../utils/functions";
 import request from "../service/request";
 
+const StyledTextFiled = styled(TextField)({
+  color: "#19191b",
+  "&:focused": { color: "#19191b" },
+});
+const StyledForm = styled("form")({
+  width: "280px",
+});
 export default function Container({
   setFootballersList,
   footballer,
@@ -21,7 +27,6 @@ export default function Container({
   const handleSubmit = async (e) => {
     e.preventDefault();
     const requestBody = { footballer, ownerId };
-
     async function fetchData() {
       await request.post("/", requestBody);
       setFootballersList((prevList) => [...prevList, footballer]);
@@ -40,7 +45,7 @@ export default function Container({
 
   return (
     <Box>
-      <Accordion id="accordion">
+      <Accordion sx={{ width: 330, bgcolor: "#b5b2b2" }}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
@@ -49,9 +54,8 @@ export default function Container({
           <Typography>Add Footballer</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <form id="accordionDetails" onSubmit={handleSubmit}>
-            <TextField
-              id="accordTextField"
+          <StyledForm onSubmit={handleSubmit}>
+            <StyledTextFiled
               name="fullName"
               label="Full name"
               placeholder="Enter first name and second name"
@@ -62,15 +66,19 @@ export default function Container({
               // helperText={error}
             />
             <Button
+              sx={{
+                margin: "8px 0",
+                bgcolor: "#19191b",
+                "&:hover": { backgroundColor: "#999999" },
+              }}
               type="submit"
               color="primary"
               variant="contained"
-              style={{ margin: "8px 0" }}
               fullWidth
             >
               Add Footballer
             </Button>
-          </form>
+          </StyledForm>
         </AccordionDetails>
       </Accordion>
     </Box>
