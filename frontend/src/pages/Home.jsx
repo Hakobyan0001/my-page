@@ -20,6 +20,7 @@ const StyledHeader = styled("div")({
   display: "flex",
   justifyContent: "space-between",
 });
+
 export default function Home() {
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);

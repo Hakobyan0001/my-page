@@ -29,7 +29,9 @@ class Request {
   delete(url) {
     return this.send(url, "DELETE");
   }
-  update(url, id, body) {}
+  put(url, body) {
+    return this.send(url, "PUT", body);
+  }
 }
 const request = new Request();
 export default request;

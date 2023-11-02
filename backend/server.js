@@ -88,13 +88,20 @@ app.post("/", (req, res) => {
   res.json({ data: footballerId });
 });
 
+app.get("/usersData", (req, res) => {
+  res.json(usersData);
+});
+
 app.delete("/footballersData/:id", (req, res) => {
   FbStorage.delete(req.params.id);
   res.json({ message: "Footballer deleted successfully" });
 });
 
-app.get("/usersData", (req, res) => {
-  res.json(usersData);
+app.put("/footballersData/:id", (req, res) => {
+  const footballerId = req.params.id;
+  const updatedData = req.body;
+  FbStorage.update(footballerId, updatedData);
+  res.json({ message: "Footballer data updated successfully" });
 });
 
 app.get("/footballersData", (req, res) => {

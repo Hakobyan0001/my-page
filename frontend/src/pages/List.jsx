@@ -1,8 +1,6 @@
 import {
-  Button,
   Grid,
   IconButton,
-  Input,
   List,
   ListItem,
   ListItemText,
@@ -26,9 +24,8 @@ const StyledListItem = styled(ListItem)({
 });
 
 export default function NameList({ footballersList, setFootballersList }) {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState([]);
   const [editingFootballer, setEditingFootballer] = useState(null);
-  const [editedName, setEditedName] = useState("");
 
   useEffect(() => {
     async function fetchData() {
@@ -38,26 +35,39 @@ export default function NameList({ footballersList, setFootballersList }) {
     fetchData();
   }, [footballersList]);
 
-  const startEditing = (footballerId, currentName) => {
-    setEditingFootballer({ footballerId, currentName });
-    setIsEditing(true);
-    setEditedName(currentName);
-  };
-  const handleCancelEditing = () => {
-    setEditingFootballer(null);
-    setIsEditing(false);
-  };
-  const handleSaveEditing = (newName) => {
-    const updatedList = footballersList.map((footballer) => {
-      if (footballer.footballerId === editingFootballer.footballerId) {
-        return { ...footballer, fullName: newName };
-      } else {
-        return footballer;
-      }
+  const startEditing = (index) => {
+    const newIsEditing = [...isEditing];
+    newIsEditing[index] = true;
+    setIsEditing(newIsEditing);
+
+    setEditingFootballer({
+      footballerId: footballersList[index].footballerId,
+      currentName: footballersList[index].fullName,
     });
-    setFootballersList(updatedList);
+  };
+
+  const handleCancelEditing = (index) => {
+    const newIsEditing = [...isEditing];
+    newIsEditing[index] = false;
+    setIsEditing(newIsEditing);
     setEditingFootballer(null);
-    setIsEditing(false);
+  };
+  const handleSaveEditing = async (newName, index) => {
+    const updatedList = [...footballersList];
+    const newIsEditing = [...isEditing];
+
+    updatedList[index] = { ...updatedList[index], fullName: newName };
+    newIsEditing[index] = false;
+    async function fetchData() {
+      await request.put(
+        `/footballersData/${footballersList[index].footballerId}`,
+        { fullName: newName }
+      );
+      setFootballersList(updatedList);
+      setIsEditing(newIsEditing);
+      setEditingFootballer(null);
+    }
+    fetchData();
   };
   const handleDelete = (id) => {
     async function fetchData() {
@@ -68,6 +78,7 @@ export default function NameList({ footballersList, setFootballersList }) {
     }
     fetchData();
   };
+
   return (
     <Grid sx={{ marginLeft: "200px" }}>
       <Typography
@@ -79,51 +90,42 @@ export default function NameList({ footballersList, setFootballersList }) {
       </Typography>
       <StyledDiv>
         <List sx={{ padding: "0" }}>
-          {Array.isArray(footballersList) ? (
-            footballersList.map((footballer, index) => (
-              <StyledListItem
-                component="div"
-                key={footballer.footballerId}
-                disablePadding
-              >
-                {isEditing ? (
-                  <FootballerEditor
-                    currentName={editingFootballer.currentName}
-                    onSave={handleSaveEditing}
-                    onCancel={handleCancelEditing}
+          {footballersList.map((footballer, index) => (
+            <StyledListItem
+              component="div"
+              key={footballer.footballerId}
+              disablePadding
+            >
+              {isEditing[index] ? (
+                <FootballerEditor
+                  currentName={editingFootballer.currentName}
+                  onSave={(newName) => handleSaveEditing(newName, index)}
+                  onCancel={() => handleCancelEditing(index)}
+                />
+              ) : (
+                <>
+                  <ListItemText
+                    sx={{ padding: "5px", color: "#19191b" }}
+                    primary={index + 1 + ". " + footballer.fullName}
                   />
-                ) : (
-                  <>
-                    <ListItemText
-                      sx={{ padding: "5px", color: "#19191b" }}
-                      primary={index + 1 + ". " + footballer.fullName}
-                    />
-                    <IconButton
-                      sx={{ color: "#19191b" }}
-                      aria-label="delete"
-                      onClick={() =>
-                        startEditing(
-                          footballer.footballerId,
-                          footballer.fullName
-                        )
-                      }
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      sx={{ color: "#19191b" }}
-                      aria-label="delete"
-                      onClick={() => handleDelete(footballer.footballerId)}
-                    >
-                      <DeleteOutlineIcon />
-                    </IconButton>
-                  </>
-                )}
-              </StyledListItem>
-            ))
-          ) : (
-            <Typography variant="body2">No footballers available.</Typography>
-          )}
+                  <IconButton
+                    sx={{ color: "#19191b" }}
+                    aria-label="delete"
+                    onClick={() => startEditing(index)}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    sx={{ color: "#19191b" }}
+                    aria-label="delete"
+                    onClick={() => handleDelete(footballer.footballerId)}
+                  >
+                    <DeleteOutlineIcon />
+                  </IconButton>
+                </>
+              )}
+            </StyledListItem>
+          ))}
         </List>
       </StyledDiv>
     </Grid>
