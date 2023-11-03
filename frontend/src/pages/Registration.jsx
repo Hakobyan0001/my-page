@@ -33,7 +33,7 @@ const StyledButton = styled(Button)({
 });
 const StyledTextField = styled(TextField)({ margin: "5px 0" });
 
-function Registration() {
+export default function Registration() {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
     userName: "",
@@ -144,5 +144,3 @@ function Registration() {
     </Grid>
   );
 }
-
-export default Registration;

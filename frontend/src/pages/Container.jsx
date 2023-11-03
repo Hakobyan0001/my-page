@@ -5,7 +5,8 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Button, TextField } from "@mui/material";
-import { Box, styled } from "@mui/system";
+import Grid from "@mui/material/Unstable_Grid2";
+import { styled } from "@mui/system";
 import usersStorage from "../utils/functions";
 import request from "../service/request";
 
@@ -22,7 +23,6 @@ export default function Container({
   footballer,
   setFootballer,
 }) {
-  // const [error, setError] = useState("");
   const ownerId = usersStorage.get("user").id;
 
   const handleSubmit = async (e) => {
@@ -32,7 +32,7 @@ export default function Container({
       await request.post("/", requestBody);
       setFootballersList((prevList) => [...prevList, footballer]);
       setFootballer(() => ({ fullName: "" }));
-      console.log("User data sent successfully.");
+      console.log("Fotballer data sent successfully.");
     }
     fetchData();
   };
@@ -45,10 +45,17 @@ export default function Container({
   };
 
   return (
-    <Box>
+    <Grid sx={{ ml: "10px" }}>
       <Accordion sx={{ width: 330, bgcolor: "#b5b2b2" }}>
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
+          expandIcon={
+            <ExpandMoreIcon
+              sx={{
+                borderRadius: "15px",
+                ":hover": { color: "#19191b", backgroundColor: "#999999" },
+              }}
+            />
+          }
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
@@ -63,8 +70,6 @@ export default function Container({
               value={footballer.fullName}
               onChange={handleChange}
               fullWidth
-              // error={!!(error && error)}
-              // helperText={error}
             />
             <Button
               sx={{
@@ -82,6 +87,6 @@ export default function Container({
           </StyledForm>
         </AccordionDetails>
       </Accordion>
-    </Box>
+    </Grid>
   );
 }
