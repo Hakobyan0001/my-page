@@ -1,25 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import usersStorage from "../utils/functions";
-import LogoutIcon from "@mui/icons-material/Logout";
 import Container from "./Container";
-import NameList from "./List";
-import { Box, styled } from "@mui/system";
-import { Typography } from "@mui/material";
+import NameList from "./NameList";
+import { Box } from "@mui/system";
+import Header from "./Header";
+import Grid from "@mui/material/Unstable_Grid2";
 
-const StyledLink = styled(Link)({
-  margin: "5px",
-  textDecoration: "none",
-  color: "#999999",
-  "&:hover": {
-    color: "#19191b",
-  },
-});
-const StyledHeader = styled("div")({
-  backgroundColor: "#8a2be2",
-  display: "flex",
-  justifyContent: "space-between",
-});
 export default function Home() {
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
@@ -36,22 +23,13 @@ export default function Home() {
     }
     navigate("/login");
   }, []);
+
   if (loading) {
     return <div>Loading...</div>;
   }
-
   return (
-    <>
-      <StyledHeader>
-        <Box>
-          <Typography variant="h3">Welcome back {user.userName}</Typography>
-        </Box>
-        <Box sx={{ paddingTop: "30px" }}>
-          <StyledLink to="/login">
-            Logout <LogoutIcon></LogoutIcon>
-          </StyledLink>
-        </Box>
-      </StyledHeader>
+    <Grid>
+      <Header userName={user.userName} />
       <Box sx={{ display: "flex" }}>
         <Container
           setFootballersList={setFootballersList}
@@ -62,7 +40,7 @@ export default function Home() {
           footballersList={footballersList}
           setFootballersList={setFootballersList}
         />
-      </Box>{" "}
-    </>
+      </Box>
+    </Grid>
   );
 }

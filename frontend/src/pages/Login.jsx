@@ -46,7 +46,8 @@ const StyledFilledInput = styled(FilledInput)({
   border: "1px solid #767676",
   ":before": { border: "none" },
 });
-function Login() {
+
+export default function Login() {
   usersStorage.clear();
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({ userName: "", password: "" });
@@ -160,4 +161,3 @@ function Login() {
     </Grid>
   );
 }
-export default Login;

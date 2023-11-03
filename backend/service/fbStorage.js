@@ -59,6 +59,24 @@ class FbStorage {
       console.log("Data added to file");
     });
   }
+
+  static update(footballerId, updatedData) {
+    console.log({ ...updatedData });
+    let fbListData = this.getAllData();
+
+    const updatedList = fbListData.map((footballer) => {
+      if (footballer.footballerId === footballerId) {
+        return { ...footballer, ...updatedData };
+      } else {
+        return footballer;
+      }
+    });
+    const jsonString = JSON.stringify(updatedList);
+    fs.writeFileSync("footballersList.json", jsonString, "utf-8", (err) => {
+      if (err) throw err;
+      console.log("Data added to file");
+    });
+  }
 }
 
 export default FbStorage;
