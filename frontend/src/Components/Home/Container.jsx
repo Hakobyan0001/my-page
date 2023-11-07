@@ -7,15 +7,15 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Button, TextField } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { styled } from "@mui/system";
-import usersStorage from "../utils/functions";
-import request from "../service/request";
+import usersStorage from "../../utils/functions";
+import request from "../../service/request";
 
 const StyledTextFiled = styled(TextField)({
   color: "#19191b",
   "&:focused": { color: "#19191b" },
 });
 const StyledForm = styled("form")({
-  width: "280px",
+  width: "95%",
 });
 
 export default function Container({
@@ -45,8 +45,8 @@ export default function Container({
   };
 
   return (
-    <Grid sx={{ ml: "10px" }}>
-      <Accordion sx={{ width: 330, bgcolor: "#b5b2b2" }}>
+    <Grid sx={{ m: "1%" }}>
+      <Accordion sx={{ bgcolor: "#b5b2b2" }}>
         <AccordionSummary
           expandIcon={
             <ExpandMoreIcon
@@ -73,7 +73,7 @@ export default function Container({
             />
             <Button
               sx={{
-                margin: "8px 0",
+                mt: "2%",
                 bgcolor: "#19191b",
                 "&:hover": { backgroundColor: "#999999" },
               }}

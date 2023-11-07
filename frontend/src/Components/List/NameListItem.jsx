@@ -1,9 +1,10 @@
-import { Grid, IconButton, ListItemText } from "@mui/material";
+import { IconButton, ListItemText } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
-import request from "../service/request";
+import request from "../../../service/request";
 import NameEditor from "./NameEditor";
 import { useState } from "react";
+import Grid from "@mui/material/Unstable_Grid2/Grid2";
 
 export default function NameListItem({
   fullName,
@@ -36,7 +37,7 @@ export default function NameListItem({
   };
 
   return (
-    <div>
+    <>
       {isEditing[index] ? (
         <NameEditor
           currentName={editingFootballer.currentName}
@@ -48,9 +49,9 @@ export default function NameListItem({
           setEditingFootballer={setEditingFootballer}
         />
       ) : (
-        <>
+        <Grid sx={{ display: "flex", width: "100%" }}>
           <ListItemText
-            sx={{ padding: "5px", color: "#19191b" }}
+            sx={{ padding: "2%", color: "#19191b" }}
             primary={index + 1 + ". " + fullName}
           />
           <IconButton
@@ -67,8 +68,8 @@ export default function NameListItem({
           >
             <DeleteOutlineIcon />
           </IconButton>
-        </>
+        </Grid>
       )}
-    </div>
+    </>
   );
 }

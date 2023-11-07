@@ -4,19 +4,10 @@ import Grid from "@mui/material/Unstable_Grid2";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Link } from "react-router-dom";
 
-const StyledLink = styled(Link)({
-  margin: "theme.spacing(1)",
-  textDecoration: "none",
-  color: "#999999",
-  "&:hover": {
-    color: "#19191b",
-  },
-});
 const StyledHeader = styled(Grid)({
   backgroundColor: "#8a2be2",
   direction: "row",
   justifyContent: "space-between",
-  padding: "theme.spacing(2)",
 });
 const StyledTypography = styled(Typography)(({ theme }) => ({
   fontSize: {
@@ -27,6 +18,15 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
   margin: theme.spacing(1),
   padding: theme.spacing(2),
 }));
+const StyledLink = styled(Link)({
+  display: "flex",
+  justifyContent: "center",
+  textDecoration: "none",
+  color: "#999999",
+  "&:hover": {
+    color: "#19191b",
+  },
+});
 
 export default function Header({ userName }) {
   return (
@@ -36,7 +36,7 @@ export default function Header({ userName }) {
           Welcome back {userName}
         </StyledTypography>
       </Box>
-      <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box sx={{ display: "flex", alignItems: "center", m: "1%", p: "1%" }}>
         <StyledLink to="/login">
           Logout <LogoutIcon />
         </StyledLink>
