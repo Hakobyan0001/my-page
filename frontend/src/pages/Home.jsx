@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import usersStorage from "../utils/functions";
-import Container from "./Container";
-import NameList from "./NameList";
-import { Box } from "@mui/system";
-import Header from "./Header";
 import Grid from "@mui/material/Unstable_Grid2";
+import usersStorage from "../utils/functions";
+import NameList from "../Components/Home/List/NameList";
+import Header from "../Components/Home/Header";
+import Container from "../Components/Home/Container";
 
 export default function Home() {
   const [user, setUser] = useState({});
@@ -28,19 +27,23 @@ export default function Home() {
     return <div>Loading...</div>;
   }
   return (
-    <Grid>
-      <Header userName={user.userName} />
-      <Box sx={{ display: "flex" }}>
+    <Grid container spacing={2}>
+      <Grid item xs={12} sx={{ padding: "0px" }}>
+        <Header userName={user.userName} />
+      </Grid>
+      <Grid item lg={2.5} md={6} sm={6} xs={12}>
         <Container
           setFootballersList={setFootballersList}
           footballer={footballer}
           setFootballer={setFootballer}
         />
+      </Grid>
+      <Grid item lg={2.5} md={6} sm={6} xs={12}>
         <NameList
           footballersList={footballersList}
           setFootballersList={setFootballersList}
         />
-      </Box>
+      </Grid>
     </Grid>
   );
 }
