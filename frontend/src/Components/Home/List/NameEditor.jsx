@@ -23,10 +23,12 @@ export default function NameEditor({
   setIsEditing,
   isEditing,
   setEditingFootballer,
+  setListIsLoading,
 }) {
   const [editedName, setEditedName] = useState(currentName);
 
   const handleSaveEditing = async (newName) => {
+    setListIsLoading(true);
     const updatedList = [...footballersList];
     const newIsEditing = [...isEditing];
 
@@ -41,6 +43,7 @@ export default function NameEditor({
       setIsEditing(newIsEditing);
       setEditingFootballer(null);
     }
+
     fetchData();
   };
   const handleCancelEditing = (index) => {
@@ -51,25 +54,43 @@ export default function NameEditor({
   };
 
   return (
-    <Grid sx={{ display: "flex", width: "100%" }}>
-      <StyledInput
-        value={editedName}
-        onChange={(e) => setEditedName(e.target.value)}
-      />
-      <IconButton
-        sx={{ color: "#19191b" }}
-        aria-label="save"
-        onClick={() => handleSaveEditing(editedName)}
+    <Grid container xs={12} md={12} lg={12}>
+      <Grid item lg={8} md={8} xs={12}>
+        <StyledInput
+          value={editedName}
+          onChange={(e) => setEditedName(e.target.value)}
+        />
+      </Grid>
+      <Grid
+        item
+        lg={2}
+        md={2}
+        xs={6}
+        sx={{ display: "flex", justifyContent: "center" }}
       >
-        <SaveIcon />
-      </IconButton>
-      <IconButton
-        sx={{ color: "#19191b" }}
-        aria-label="cancel"
-        onClick={() => handleCancelEditing(index)}
+        <IconButton
+          sx={{ color: "#19191b" }}
+          aria-label="save"
+          onClick={() => handleSaveEditing(editedName)}
+        >
+          <SaveIcon />
+        </IconButton>
+      </Grid>
+      <Grid
+        item
+        lg={2}
+        md={2}
+        xs={6}
+        sx={{ display: "flex", justifyContent: "center" }}
       >
-        <CancelIcon />
-      </IconButton>
+        <IconButton
+          sx={{ color: "#19191b" }}
+          aria-label="cancel"
+          onClick={() => handleCancelEditing(index)}
+        >
+          <CancelIcon />
+        </IconButton>
+      </Grid>
     </Grid>
   );
 }

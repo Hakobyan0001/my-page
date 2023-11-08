@@ -12,6 +12,7 @@ export default function NameListItem({
   index,
   setFootballersList,
   footballersList,
+  setListIsLoading,
 }) {
   const [isEditing, setIsEditing] = useState([]);
   const [editingFootballer, setEditingFootballer] = useState(null);
@@ -27,6 +28,7 @@ export default function NameListItem({
     });
   };
   const handleDelete = (id) => {
+    setListIsLoading(true);
     async function fetchData() {
       await request.delete(`/footballersData/${id}`);
       setFootballersList((prevList) =>
@@ -37,7 +39,7 @@ export default function NameListItem({
   };
 
   return (
-    <>
+    <Grid container sx={{ width: "100%" }}>
       {isEditing[index] ? (
         <NameEditor
           currentName={editingFootballer.currentName}
@@ -47,29 +49,48 @@ export default function NameListItem({
           setIsEditing={setIsEditing}
           isEditing={isEditing}
           setEditingFootballer={setEditingFootballer}
+          setListIsLoading={setListIsLoading}
         />
       ) : (
-        <Grid sx={{ display: "flex", width: "100%" }}>
-          <ListItemText
-            sx={{ padding: "2%", color: "#19191b" }}
-            primary={index + 1 + ". " + fullName}
-          />
-          <IconButton
-            sx={{ color: "#19191b" }}
-            aria-label="edit"
-            onClick={() => startEditing(index)}
+        <Grid container xs={12} md={12} lg={12}>
+          <Grid item lg={8} md={8} xs={12}>
+            <ListItemText
+              sx={{ padding: "2%", color: "#19191b" }}
+              primary={index + 1 + ". " + fullName}
+            />
+          </Grid>
+          <Grid
+            item
+            lg={2}
+            md={2}
+            xs={6}
+            sx={{ display: "flex", justifyContent: "center" }}
           >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            sx={{ color: "#19191b" }}
-            aria-label="delete"
-            onClick={() => handleDelete(footballerId)}
+            <IconButton
+              sx={{ color: "#19191b" }}
+              aria-label="edit"
+              onClick={() => startEditing(index)}
+            >
+              <EditIcon />
+            </IconButton>
+          </Grid>
+          <Grid
+            item
+            lg={2}
+            md={2}
+            xs={6}
+            sx={{ display: "flex", justifyContent: "center" }}
           >
-            <DeleteOutlineIcon />
-          </IconButton>
+            <IconButton
+              sx={{ color: "#19191b" }}
+              aria-label="delete"
+              onClick={() => handleDelete(footballerId)}
+            >
+              <DeleteOutlineIcon />
+            </IconButton>
+          </Grid>
         </Grid>
       )}
-    </>
+    </Grid>
   );
 }
