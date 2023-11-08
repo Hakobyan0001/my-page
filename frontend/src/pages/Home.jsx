@@ -5,44 +5,56 @@ import usersStorage from "../utils/functions";
 import NameList from "../Components/Home/List/NameList";
 import Header from "../Components/Home/Header";
 import Container from "../Components/Home/Container";
+import { Stack } from "@mui/system";
+import { Skeleton } from "@mui/material";
 
 export default function Home() {
   const [user, setUser] = useState({});
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [pageIsloading, setPageIsLoading] = useState(true);
+  const [listIsLoading, setListIsLoading] = useState(true);
   const [footballer, setFootballer] = useState({ fullName: "" });
   const [footballersList, setFootballersList] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const savedUser = usersStorage.get("user");
     if (savedUser?.id) {
-      setLoading(false);
+      setPageIsLoading(false);
       setUser(savedUser);
       return;
     }
     navigate("/login");
   }, []);
 
-  if (loading) {
+  if (pageIsloading) {
     return <div>Loading...</div>;
   }
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12} sx={{ padding: "0px" }}>
+    <Grid>
+      <Grid sx={{ padding: "0px" }}>
         <Header userName={user.userName} />
       </Grid>
-      <Grid item lg={2.5} md={6} sm={6} xs={12}>
-        <Container
-          setFootballersList={setFootballersList}
-          footballer={footballer}
-          setFootballer={setFootballer}
-        />
-      </Grid>
-      <Grid item lg={2.5} md={6} sm={6} xs={12}>
-        <NameList
-          footballersList={footballersList}
-          setFootballersList={setFootballersList}
-        />
+      <Grid
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <Grid sx={{ width: "20%" }}>
+          <NameList
+            footballersList={footballersList}
+            setFootballersList={setFootballersList}
+            listIsloading={listIsLoading}
+            setListIsLoading={setListIsLoading}
+          />
+          <Container
+            setFootballersList={setFootballersList}
+            footballer={footballer}
+            setFootballer={setFootballer}
+            setListIsLoading={setListIsLoading}
+          />
+        </Grid>
       </Grid>
     </Grid>
   );

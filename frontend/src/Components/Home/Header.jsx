@@ -31,7 +31,7 @@ const StyledLink = styled(Link)({
 export default function Header({ userName }) {
   return (
     <StyledHeader container>
-      <Box>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
         <StyledTypography variant="h4">
           Welcome back {userName}
         </StyledTypography>
