@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Grid,
@@ -10,6 +10,8 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
+import InputLabel from "@mui/material/InputLabel";
+import OutlinedInput from "@mui/material/OutlinedInput";
 import FilledInput from "@mui/material/FilledInput";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -48,7 +50,6 @@ const StyledFilledInput = styled(FilledInput)({
 });
 
 export default function Login() {
-  usersStorage.clear();
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({ userName: "", password: "" });
   const [errors, setErrors] = useState({
@@ -56,6 +57,10 @@ export default function Login() {
     passwordError: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    usersStorage.clear();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -71,7 +76,7 @@ export default function Login() {
     if (res.ok) {
       console.log("User data sent successfully.");
       usersStorage.set("user", res.data);
-      navigate("/");
+      navigate("/", { replace: true });
     } else {
       setErrors(res.errors);
     }
@@ -134,6 +139,10 @@ export default function Login() {
             }
             error={!!(errors && errors.passwordError)}
             helperText={errors.passwordError}
+            InputLabelProps={{
+              htmlFor: "outlined-basic",
+              shrink: true,
+            }}
           />
           <FormControlLabel
             control={<Checkbox name="checkedB" color="primary" />}

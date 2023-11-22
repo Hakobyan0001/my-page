@@ -5,8 +5,6 @@ import usersStorage from "../utils/functions";
 import NameList from "../Components/Home/List/NameList";
 import Header from "../Components/Home/Header";
 import Container from "../Components/Home/Container";
-import { Stack } from "@mui/system";
-import { Skeleton } from "@mui/material";
 
 export default function Home() {
   const [user, setUser] = useState({});

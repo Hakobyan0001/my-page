@@ -61,6 +61,12 @@ export default function Registration() {
     if (res.ok) {
       console.log("User data sent successfully.");
       navigate("/");
+      setUserInfo({
+        userName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
     } else {
       setErrors(res.errors);
     }
