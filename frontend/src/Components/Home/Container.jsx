@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Modal, TextField } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Box, styled } from "@mui/system";
@@ -32,23 +32,32 @@ export default function Container({
   setFootballer,
   setListIsLoading,
 }) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const ownerId = usersStorage.get("user").id;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setListIsLoading(true);
-    const requestBody = { footballer, ownerId };
-    async function fetchData() {
+    setSubmitting(true);
+    try {
+      const requestBody = { footballer, ownerId };
+
       await request.post("/", requestBody);
+
       setFootballersList((prevList) => [...prevList, footballer]);
       setFootballer(() => ({ fullName: "" }));
-      console.log("Fotballer data sent successfully.");
+      console.log("Footballer data sent successfully.");
+
+      handleClose();
+    } catch (error) {
+      console.error("Error adding footballer:", error);
+    } finally {
+      setSubmitting(false);
+      setListIsLoading(false);
     }
-    fetchData();
-    handleClose();
   };
 
   const handleChange = (e) => {
@@ -96,8 +105,9 @@ export default function Container({
               color="primary"
               variant="contained"
               fullWidth
+              disabled={submitting}
             >
-              Add
+              {submitting ? "Adding..." : "Add"}
             </Button>
           </StyledForm>
         </StyledBox>

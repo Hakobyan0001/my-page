@@ -2,24 +2,42 @@ import usersStorage from "../utils/functions.js";
 
 class Request {
   baseUrl = "http://localhost:3001";
-  async send(url, method, body) {
-    const ownerId = usersStorage.get("user").id;
 
-    let params = {
-      url,
-      method,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: ownerId,
-      },
+  async send(url, method, body) {
+    const ownerId = usersStorage.get("user")?.id;
+
+    const headers = {
+      "Content-Type": "application/json",
     };
+
+    if (ownerId) {
+      headers["Authorization"] = ownerId;
+    }
+
+    const params = {
+      method,
+      headers,
+    };
+
     if (body) {
       params.body = JSON.stringify(body);
     }
-    const response = await fetch(this.baseUrl + url, params);
-    const res = await response.json();
-    return res;
+
+    try {
+      const response = await fetch(this.baseUrl + url, params);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Request error:", error);
+      throw error;
+    }
   }
+
   get(url) {
     return this.send(url, "GET");
   }

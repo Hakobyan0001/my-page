@@ -23,6 +23,7 @@ export default function NameList({
 }) {
   useEffect(() => {
     async function fetchData() {
+      setListIsLoading(true);
       const data = await request.get("/footballersData");
       setFootballersList(data);
     }

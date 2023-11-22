@@ -27,14 +27,22 @@ export default function NameListItem({
       currentName: footballersList[index].fullName,
     });
   };
+
   const handleDelete = (id) => {
     setListIsLoading(true);
     async function fetchData() {
-      await request.delete(`/footballersData/${id}`);
-      setFootballersList((prevList) =>
-        prevList.filter((footballer) => footballer.footballerId !== id)
-      );
+      try {
+        await request.delete(`/footballersData/${id}`);
+        setFootballersList((prevList) =>
+          prevList.filter((footballer) => footballer.footballerId !== id)
+        );
+      } catch (error) {
+        console.error("Error deleting data:", error);
+      } finally {
+        setListIsLoading(false);
+      }
     }
+
     fetchData();
   };
 
