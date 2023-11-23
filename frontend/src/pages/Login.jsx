@@ -10,8 +10,6 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
-import InputLabel from "@mui/material/InputLabel";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import FilledInput from "@mui/material/FilledInput";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -51,9 +49,9 @@ const StyledFilledInput = styled(FilledInput)({
 
 export default function Login() {
   const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState({ userName: "", password: "" });
+  const [userInfo, setUserInfo] = useState({ username: "", password: "" });
   const [errors, setErrors] = useState({
-    userNameError: "",
+    usernameError: "",
     passwordError: "",
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -107,14 +105,14 @@ export default function Login() {
         </Grid>
         <form onSubmit={handleSubmit}>
           <StyledTextField
-            name="userName"
-            label="UserName"
+            name="username"
+            label="Username"
             placeholder="Enter username"
-            value={userInfo.userName}
+            value={userInfo.username}
             onChange={handleChange}
             fullWidth
-            error={!!(errors && errors.userNameError)}
-            helperText={errors.userNameError}
+            error={!!(errors && errors.usernameError)}
+            helperText={errors.usernameError}
           />
           <StyledFilledInput
             id="outlined-basic"

@@ -39,7 +39,7 @@ app.post("/registration", async (req, res) => {
     return;
   }
   const userData = {
-    userName: req.body.userName,
+    username: req.body.username,
     email: req.body.email,
     password: req.body.password,
   };
@@ -52,12 +52,9 @@ app.post("/login", async (req, res) => {
 
   try {
     const usersData = await UserStorage.getUserData(db);
-    console.log(usersData);
     let possibleUser = usersData.find((user) => {
-      console.log(user);
-
       if (
-        user.username === req.body.userName &&
+        user.username === req.body.username &&
         user.password === req.body.password
       ) {
         return true;
@@ -70,10 +67,9 @@ app.post("/login", async (req, res) => {
       res.json({ errors, ok: false });
       return;
     }
-
     res.json({
       data: {
-        userName: possibleUser.userName,
+        username: possibleUser.username,
         email: possibleUser.email,
         id: possibleUser.id,
       },
@@ -85,21 +81,26 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post("/", (req, res) => {
-  let error = AddValidator.validate(req.body.footballer);
-  if (error) {
-    res.json(error);
-    return;
+app.post("/", async (req, res) => {
+  try {
+    let error = AddValidator.validate(req.body.footballer);
+    if (error) {
+      res.json({ error });
+      return;
+    }
+    const ownerId = req.headers.authorization;
+    let footballerData = [];
+    footballerData.push({
+      owner_id: ownerId,
+      fullName: req.body.footballer.fullName,
+    });
+    await FbStorage.set(db, footballerData);
+    const footballerId = await FbStorage.getDatabyId(db);
+    res.json({ data: footballerId });
+  } catch (err) {
+    console.error("Error adding footballer:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
-  let footballerData = [];
-  footballerData.push({
-    // ownerId: req.body.ownerId,
-    // footballerId: footballerId,
-    fullName: req.body.footballer.fullName,
-  });
-  FbStorage.set(db, footballerData);
-  const footballerId = "";
-  res.json({ data: footballerId });
 });
 
 app.get("/usersData", (req, res) => {
@@ -113,21 +114,28 @@ app.delete("/footballersData/:id", (req, res) => {
 
 app.put("/footballersData/:id", (req, res) => {
   const footballerId = req.params.id;
-  const updatedData = req.body;
+  console.log(req.params);
+
+  const updatedData = req.body.fullName;
   FbStorage.update(db, footballerId, updatedData);
   res.json({ message: "Footballer data updated successfully" });
 });
 
-app.get("/footballersData", (req, res) => {
+app.get("/footballersData", async (req, res) => {
   let footballersData = [];
   const ownerId = req.headers.authorization;
-  if (ownerId) {
-    footballersData = FbStorage.getDatabyId(db, ownerId);
+  try {
+    if (ownerId) {
+      footballersData = await FbStorage.getDatabyId(db, ownerId);
+    } else {
+      footballersData = await FbStorage.getAllData(db);
+    }
+
     res.json(footballersData);
-    return;
+  } catch (error) {
+    console.error("Error fetching footballers data:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
-  footballersData = FbStorage.getAllData(db);
-  res.json(footballersData);
 });
 
 app.listen(port, () => {

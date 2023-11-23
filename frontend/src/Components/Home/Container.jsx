@@ -47,7 +47,13 @@ export default function Container({
 
       await request.post("/", requestBody);
 
-      setFootballersList((prevList) => [...prevList, footballer]);
+      setFootballersList((prevList) => {
+        if (Array.isArray(prevList)) {
+          return [...prevList, footballer];
+        } else {
+          return [footballer];
+        }
+      });
       setFootballer(() => ({ fullName: "" }));
       console.log("Footballer data sent successfully.");
 

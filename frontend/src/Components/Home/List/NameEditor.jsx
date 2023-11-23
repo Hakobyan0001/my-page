@@ -38,7 +38,7 @@ export default function NameEditor({
     newIsEditing[index] = false;
     async function fetchData() {
       await request.put(
-        `/footballersData/${footballersList[index].footballerId}`,
+        `/footballersData/${footballersList[index].footballer_id}`,
         { fullName: newName }
       );
       setFootballersList(updatedList);

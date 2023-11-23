@@ -4,14 +4,14 @@ class Request {
   baseUrl = "http://localhost:3001";
 
   async send(url, method, body) {
-    const ownerId = usersStorage.get("user")?.id;
+    const user = usersStorage.get("user");
 
     const headers = {
       "Content-Type": "application/json",
     };
 
-    if (ownerId) {
-      headers["Authorization"] = ownerId;
+    if (user && user.id) {
+      headers["Authorization"] = user.id;
     }
 
     const params = {

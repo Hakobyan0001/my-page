@@ -24,7 +24,7 @@ export default function NameListItem({
 
     setEditingFootballer({
       footballerId: footballersList[index].footballerId,
-      currentName: footballersList[index].fullName,
+      currentName: footballersList[index].fullname,
     });
   };
 
