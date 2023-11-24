@@ -1,81 +1,46 @@
-import path from "path";
-import { fileURLToPath } from "url";
-import fs from "fs";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 class FbStorage {
-  static getDatabyId(ownerId) {
-    let fbListData = [];
+  static async getDatabyId(db, ownerId) {
+    let fbData = [];
     try {
-      fbListData = JSON.parse(
-        fs.readFileSync(
-          path.join(__dirname, "..", "footballersList.json"),
-          "utf-8"
-        )
+      const result = await db.query(
+        "SELECT * FROM footballers WHERE owner_id = $1",
+        [ownerId]
       );
+      fbData = result.rows;
     } catch (err) {
-      console.error("Error reading footballersList.json:", err);
+      console.error("Error reading footballers data", err);
     }
-    fbListData = fbListData.filter(
-      (footballers) => footballers.ownerId === ownerId
-    );
-    return fbListData;
+    return fbData;
   }
 
-  static getAllData() {
-    let fbListData = [];
+  static async getAllData(db) {
+    let fbData = [];
     try {
-      fbListData = JSON.parse(
-        fs.readFileSync(
-          path.join(__dirname, "..", "footballersList.json"),
-          "utf-8"
-        )
-      );
+      const result = await db.query("SELECT * FROM footballers");
+      fbData = result.rows;
     } catch (err) {
-      console.error("Error reading footballersList.json:", err);
+      console.error("Error reading footballers data", err);
     }
-    return fbListData;
+    return fbData;
   }
 
-  static set(footballers) {
-    const jsonString = JSON.stringify(footballers);
-    fs.writeFileSync("footballersList.json", jsonString, "utf-8", (err) => {
-      if (err) throw err;
-      console.log("Data added to file");
-    });
-  }
-
-  static delete(id) {
-    let fbListData = this.getAllData();
-    fbListData = fbListData.filter(
-      (footballer) => footballer.footballerId !== id
+  static async set(db, fbData) {
+    const { owner_id, fullName } = fbData[0];
+    await db.query(
+      "INSERT INTO footballers (owner_id,fullname) VALUES ($1,$2)",
+      [owner_id, fullName]
     );
-
-    const jsonString = JSON.stringify(fbListData);
-    fs.writeFileSync("footballersList.json", jsonString, "utf-8", (err) => {
-      if (err) throw err;
-      console.log("Data added to file");
-    });
   }
 
-  static update(footballerId, updatedData) {
-    console.log({ ...updatedData });
-    let fbListData = this.getAllData();
+  static async delete(db, id) {
+    await db.query("DELETE FROM footballers WHERE footballer_Id = $1", [id]);
+  }
 
-    const updatedList = fbListData.map((footballer) => {
-      if (footballer.footballerId === footballerId) {
-        return { ...footballer, ...updatedData };
-      } else {
-        return footballer;
-      }
-    });
-    const jsonString = JSON.stringify(updatedList);
-    fs.writeFileSync("footballersList.json", jsonString, "utf-8", (err) => {
-      if (err) throw err;
-      console.log("Data added to file");
-    });
+  static async update(db, id, updatedData) {
+    await db.query(
+      "UPDATE footballers SET fullname =$1 WHERE footballer_Id =$2",
+      [updatedData, id]
+    );
   }
 }
 

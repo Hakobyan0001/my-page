@@ -5,7 +5,7 @@ import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import styled from "@emotion/styled";
 import CancelIcon from "@mui/icons-material/Cancel";
 import SaveIcon from "@mui/icons-material/Save";
-const StyledInput = styled(Input)({
+const StyledInput = styled(Input)(({ theme, isEdited }) => ({
   padding: "2%",
   ":before": {
     content: "none",
@@ -13,7 +13,8 @@ const StyledInput = styled(Input)({
   ":after": {
     content: "none",
   },
-});
+  border: isEdited ? `2px solid ${theme.palette.primary.main}` : "none",
+}));
 
 export default function NameEditor({
   currentName,
@@ -26,6 +27,7 @@ export default function NameEditor({
   setListIsLoading,
 }) {
   const [editedName, setEditedName] = useState(currentName);
+  const isNameEdited = editedName !== currentName;
 
   const handleSaveEditing = async (newName) => {
     setListIsLoading(true);
@@ -36,7 +38,7 @@ export default function NameEditor({
     newIsEditing[index] = false;
     async function fetchData() {
       await request.put(
-        `/footballersData/${footballersList[index].footballerId}`,
+        `/footballersData/${footballersList[index].footballer_id}`,
         { fullName: newName }
       );
       setFootballersList(updatedList);
@@ -59,6 +61,7 @@ export default function NameEditor({
         <StyledInput
           value={editedName}
           onChange={(e) => setEditedName(e.target.value)}
+          isEdited={isNameEdited}
         />
       </Grid>
       <Grid

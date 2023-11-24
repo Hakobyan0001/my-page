@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Modal, TextField } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Box, styled } from "@mui/system";
@@ -18,37 +18,66 @@ const StyledBox = styled(Box)({
   borderRadius: "5px",
 });
 
-const StyledTextFiled = styled(TextField)({
-  color: "#19191b",
-  "&:focused": { color: "#19191b" },
-});
-const StyledForm = styled("form")({
-  width: "80%",
+const StyledTextField = styled(TextField)({
+  "& label.Mui-focused": {
+    color: "#19191b",
+  },
+  "& .MuiInput-underline:after, & .MuiFilledInput-underline:after": {
+    borderBottomColor: "#19191b",
+  },
+  "& .MuiOutlinedInput-root.Mui-focused": {
+    "& fieldset": {
+      borderColor: "#19191b",
+    },
+  },
+  "input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus,input:-webkit-autofill:active":
+    {
+      WebkitBoxShadow: "0 0 0 60px #999999 inset!important",
+    },
 });
 
-export default function Container({
+const StyledForm = styled("form")({
+  "&": {
+    width: "80%",
+  },
+});
+
+export default function AddingFb({
   setFootballersList,
   footballer,
   setFootballer,
   setListIsLoading,
 }) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const ownerId = usersStorage.get("user").id;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setListIsLoading(true);
-    const requestBody = { footballer, ownerId };
-    async function fetchData() {
+    setSubmitting(true);
+    try {
+      const requestBody = { footballer, ownerId };
       await request.post("/", requestBody);
-      setFootballersList((prevList) => [...prevList, footballer]);
+
+      setFootballersList((prevList) => {
+        if (Array.isArray(prevList)) {
+          return [...prevList, footballer];
+        } else {
+          return [footballer];
+        }
+      });
       setFootballer(() => ({ fullName: "" }));
-      console.log("Fotballer data sent successfully.");
+      console.log("Footballer data sent successfully.");
+      handleClose();
+    } catch (error) {
+      console.error("Error adding footballer:", error);
+    } finally {
+      setSubmitting(false);
+      setListIsLoading(false);
     }
-    fetchData();
-    handleClose();
   };
 
   const handleChange = (e) => {
@@ -78,12 +107,13 @@ export default function Container({
       >
         <StyledBox>
           <StyledForm onSubmit={handleSubmit}>
-            <StyledTextFiled
+            <StyledTextField
               name="fullName"
               label="Full name"
               placeholder="Enter first name and second name"
               value={footballer.fullName}
               onChange={handleChange}
+              autoFocus
               fullWidth
             />
             <Button
@@ -96,8 +126,9 @@ export default function Container({
               color="primary"
               variant="contained"
               fullWidth
+              disabled={submitting}
             >
-              Add
+              {submitting ? "Adding..." : "Add"}
             </Button>
           </StyledForm>
         </StyledBox>

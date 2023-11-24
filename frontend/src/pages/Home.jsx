@@ -4,9 +4,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import usersStorage from "../utils/functions";
 import NameList from "../Components/Home/List/NameList";
 import Header from "../Components/Home/Header";
-import Container from "../Components/Home/Container";
-import { Stack } from "@mui/system";
-import { Skeleton } from "@mui/material";
+import AddingFb from "../Components/Home/AddingFb";
 
 export default function Home() {
   const [user, setUser] = useState({});
@@ -32,7 +30,7 @@ export default function Home() {
   return (
     <Grid>
       <Grid sx={{ padding: "0px" }}>
-        <Header userName={user.userName} />
+        <Header userName={user.username} />
       </Grid>
       <Grid
         sx={{
@@ -48,7 +46,7 @@ export default function Home() {
             listIsloading={listIsLoading}
             setListIsLoading={setListIsLoading}
           />
-          <Container
+          <AddingFb
             setFootballersList={setFootballersList}
             footballer={footballer}
             setFootballer={setFootballer}

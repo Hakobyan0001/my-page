@@ -31,7 +31,24 @@ const StyledButton = styled(Button)({
   color: "#999999",
   "&:hover": { backgroundColor: "#999999", color: "#19191b" },
 });
-const StyledTextField = styled(TextField)({ margin: "5px 0" });
+const StyledTextField = styled(TextField)({
+  margin: "5px 0",
+  "& label.Mui-focused": {
+    color: "#19191b",
+  },
+  "& .MuiInput-underline:after, & .MuiFilledInput-underline:after": {
+    borderBottomColor: "#19191b",
+  },
+  "& .MuiOutlinedInput-root.Mui-focused": {
+    "& fieldset": {
+      borderColor: "#19191b",
+    },
+  },
+  "input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus,input:-webkit-autofill:active":
+    {
+      WebkitBoxShadow: "0 0 0 60px #999999 inset!important",
+    },
+});
 
 export default function Registration() {
   const navigate = useNavigate();
@@ -61,6 +78,12 @@ export default function Registration() {
     if (res.ok) {
       console.log("User data sent successfully.");
       navigate("/");
+      setUserInfo({
+        userName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
     } else {
       setErrors(res.errors);
     }
@@ -77,7 +100,13 @@ export default function Registration() {
     <Grid>
       <StyledPaper elevation={10}>
         <Grid className="grid">
-          <Avatar sx={{ backgroundColor: "#1bbd7e", margin: "auto" }}>
+          <Avatar
+            sx={{
+              backgroundColor: "#19191b",
+              color: "#999999",
+              margin: "auto",
+            }}
+          >
             <LockOutlinedIcon />
           </Avatar>
           <h2>Create Account</h2>
@@ -136,9 +165,6 @@ export default function Registration() {
         </form>
         <Typography>
           <StyledLink to="/login">Have account ?</StyledLink>
-        </Typography>
-        <Typography>
-          <StyledLink to="/">Go to home</StyledLink>
         </Typography>
       </StyledPaper>
     </Grid>

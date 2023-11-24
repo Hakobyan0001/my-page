@@ -10,10 +10,14 @@ import { useEffect } from "react";
 import styled from "@emotion/styled";
 import NameListItem from "./NameListItem";
 import request from "../../../service/request";
+import usersStorage from "../../../utils/functions";
 
 const StyledListItem = styled(ListItem)({
   backgroundColor: "#b5b2b2",
   border: "1px solid",
+});
+const StyledTypographyItem = styled(Typography)({
+  textAlign: "center",
 });
 export default function NameList({
   footballersList,
@@ -23,38 +27,53 @@ export default function NameList({
 }) {
   useEffect(() => {
     async function fetchData() {
-      const data = await request.get("/footballersData");
-      setFootballersList(data);
+      try {
+        setListIsLoading(true);
+        const user = usersStorage.get("user");
+        const data = await request.get("/footballersData", {
+          headers: { Authorization: user.id },
+        });
+        setFootballersList(data);
+      } catch (error) {
+        console.error("Error fetching footballer data:", error);
+      }
     }
     fetchData();
     setListIsLoading(false);
   }, [footballersList]);
-
   return (
     <Grid sx={{ m: "1%" }}>
-      <Typography sx={{ textAlign: "center" }} variant="h6">
-        Footballers list
-      </Typography>
+      <StyledTypographyItem variant="h6">Footballers list</StyledTypographyItem>
       {listIsloading ? (
-        footballersList.map((footballer, index) => (
-          <Stack key={index}>
-            <Skeleton sx={{ background: "#b5b2b2" }} variant="text" />
-          </Stack>
-        ))
+        footballersList && footballersList.length > 0 ? (
+          footballersList.map((footballer, index) => (
+            <Stack key={index}>
+              <Skeleton sx={{ background: "#b5b2b2" }} variant="text" />
+            </Stack>
+          ))
+        ) : (
+          <Typography>No footballers to display</Typography>
+        )
       ) : (
         <List sx={{ width: "100%" }}>
-          {footballersList.map((footballer, index) => (
-            <StyledListItem key={footballer.footballerId} disablePadding>
-              <NameListItem
-                fullName={footballer.fullName}
-                footballerId={footballer.footballerId}
-                index={index}
-                setFootballersList={setFootballersList}
-                footballersList={footballersList}
-                setListIsLoading={setListIsLoading}
-              />
-            </StyledListItem>
-          ))}
+          {footballersList && footballersList.length > 0 ? (
+            footballersList.map((footballer, index) => (
+              <StyledListItem key={footballer.footballer_id} disablePadding>
+                <NameListItem
+                  fullName={footballer.fullname}
+                  footballerId={footballer.footballer_id}
+                  index={index}
+                  setFootballersList={setFootballersList}
+                  footballersList={footballersList}
+                  setListIsLoading={setListIsLoading}
+                />
+              </StyledListItem>
+            ))
+          ) : (
+            <StyledTypographyItem sx={{ textAlign: "center" }}>
+              No footballers to display
+            </StyledTypographyItem>
+          )}
         </List>
       )}
     </Grid>

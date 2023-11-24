@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Grid,
@@ -10,7 +10,6 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
-import FilledInput from "@mui/material/FilledInput";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -39,23 +38,37 @@ const StyledButton = styled(Button)({
   color: "#999999",
   "&:hover": { backgroundColor: "#999999", color: "#19191b" },
 });
-const StyledTextField = styled(TextField)({ margin: "5px 0" });
-const StyledFilledInput = styled(FilledInput)({
-  backgroundColor: "#999999",
-  borderRadius: "4px",
-  border: "1px solid #767676",
-  ":before": { border: "none" },
+const StyledTextField = styled(TextField)({
+  margin: "5px 0",
+  "& label.Mui-focused": {
+    color: "#19191b",
+  },
+  "& .MuiInput-underline:after, & .MuiFilledInput-underline:after": {
+    borderBottomColor: "#19191b",
+  },
+  "& .MuiOutlinedInput-root.Mui-focused": {
+    "& fieldset": {
+      borderColor: "#19191b",
+    },
+  },
+  "input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus,input:-webkit-autofill:active":
+    {
+      WebkitBoxShadow: "0 0 0 60px #999999 inset!important",
+    },
 });
 
 export default function Login() {
-  usersStorage.clear();
   const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState({ userName: "", password: "" });
+  const [userInfo, setUserInfo] = useState({ username: "", password: "" });
   const [errors, setErrors] = useState({
-    userNameError: "",
+    usernameError: "",
     passwordError: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    usersStorage.clear();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -71,7 +84,7 @@ export default function Login() {
     if (res.ok) {
       console.log("User data sent successfully.");
       usersStorage.set("user", res.data);
-      navigate("/");
+      navigate("/", { replace: true });
     } else {
       setErrors(res.errors);
     }
@@ -95,23 +108,29 @@ export default function Login() {
     <Grid>
       <StyledPaper elevation={10}>
         <Grid align="center">
-          <Avatar sx={{ backgroundColor: "#1bbd7e", margin: "auto" }}>
+          <Avatar
+            sx={{
+              backgroundColor: "#19191b",
+              color: "#999999",
+              margin: "auto",
+            }}
+          >
             <LockOutlinedIcon />
           </Avatar>
           <h2>Sign In</h2>
         </Grid>
         <form onSubmit={handleSubmit}>
           <StyledTextField
-            name="userName"
-            label="UserName"
+            name="username"
+            label="Username"
             placeholder="Enter username"
-            value={userInfo.userName}
+            value={userInfo.username}
             onChange={handleChange}
             fullWidth
-            error={!!(errors && errors.userNameError)}
-            helperText={errors.userNameError}
+            error={!!(errors && errors.usernameError)}
+            helperText={errors.usernameError}
           />
-          <StyledFilledInput
+          <StyledTextField
             id="outlined-basic"
             variant="outlined"
             name="password"
@@ -121,22 +140,28 @@ export default function Login() {
             onChange={handleChange}
             value={userInfo.password}
             fullWidth
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                </IconButton>
-              </InputAdornment>
-            }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
             error={!!(errors && errors.passwordError)}
             helperText={errors.passwordError}
+            InputLabelProps={{
+              htmlFor: "outlined-basic",
+              shrink: true,
+            }}
           />
           <FormControlLabel
-            control={<Checkbox name="checkedB" color="primary" />}
+            control={<Checkbox name="checkedB" style={{ color: "#19191b" }} />}
             label="Remember me"
           />
           <StyledButton
@@ -153,9 +178,6 @@ export default function Login() {
         </Typography>
         <Typography>
           <StyledLink to="/registration">Create Account</StyledLink>
-        </Typography>
-        <Typography>
-          <StyledLink to="/">Go to home</StyledLink>
         </Typography>
       </StyledPaper>
     </Grid>
