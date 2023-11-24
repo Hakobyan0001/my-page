@@ -41,7 +41,6 @@ export default function NameList({
     fetchData();
     setListIsLoading(false);
   }, [footballersList]);
-  // console.log(footballersList);
   return (
     <Grid sx={{ m: "1%" }}>
       <StyledTypographyItem variant="h6">Footballers list</StyledTypographyItem>
@@ -59,10 +58,10 @@ export default function NameList({
         <List sx={{ width: "100%" }}>
           {footballersList && footballersList.length > 0 ? (
             footballersList.map((footballer, index) => (
-              <StyledListItem key={footballer.footballerId} disablePadding>
+              <StyledListItem key={footballer.footballer_id} disablePadding>
                 <NameListItem
                   fullName={footballer.fullname}
-                  footballerId={footballer.footballerId}
+                  footballerId={footballer.footballer_id}
                   index={index}
                   setFootballersList={setFootballersList}
                   footballersList={footballersList}

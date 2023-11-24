@@ -61,14 +61,13 @@ export default function NameListItem({
         />
       ) : (
         <Grid container xs={12} md={12} lg={12}>
-          <Grid item lg={8} md={8} xs={12}>
+          <Grid lg={8} md={8} xs={12}>
             <ListItemText
               sx={{ padding: "2%", color: "#19191b" }}
               primary={index + 1 + ". " + fullName}
             />
           </Grid>
           <Grid
-            item
             lg={2}
             md={2}
             xs={6}
@@ -83,7 +82,6 @@ export default function NameListItem({
             </IconButton>
           </Grid>
           <Grid
-            item
             lg={2}
             md={2}
             xs={6}

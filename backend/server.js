@@ -114,8 +114,6 @@ app.delete("/footballersData/:id", (req, res) => {
 
 app.put("/footballersData/:id", (req, res) => {
   const footballerId = req.params.id;
-  console.log(req.params);
-
   const updatedData = req.body.fullName;
   FbStorage.update(db, footballerId, updatedData);
   res.json({ message: "Footballer data updated successfully" });
